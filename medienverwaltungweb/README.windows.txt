@@ -12,8 +12,6 @@ Prerequisite:
 	
     medienverwaltungweb>python setup.py develop
 
-	pip install repoze.who.plugins.openid
-
 Make a config file as follows::
 
     medienverwaltungweb>paster make-config medienverwaltungweb config.ini
