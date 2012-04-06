@@ -10,7 +10,7 @@ class UserModelPlugin(object):
     def authenticate(self, environ, identity):
         log.debug("authenticate(identity: %s)" % identity)
         try:
-            username = identity['login']
+            username = unicode(identity['login'])
             password = identity['password']
         except KeyError:
             return None
@@ -21,7 +21,7 @@ class UserModelPlugin(object):
                         .first()
 
         if not user_model:
-            log.debug("unkown user: %s" % username)
+            log.info("unknown user: '%s'" % username)
             return None
         else:
             hasher = hashlib.sha1()
@@ -32,7 +32,7 @@ class UserModelPlugin(object):
             if user_model.pwd_hash == pwd_hash:
                 return user_model
             else:
-                log.debug("bad password '%s' for user '%s'" %\
+                log.info("bad password '%s' for user '%s'" %\
                     (password, username))
 
 
