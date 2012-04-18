@@ -2,7 +2,8 @@
 *.gz
 *.swp
 *.pyc
-*.conf
+.idea
+/*.conf
 *.bak
 *.log
 *.egg
