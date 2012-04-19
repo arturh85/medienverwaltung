@@ -1,5 +1,0 @@
-*.db
-nosetests.xml
-data/*
-.coverage
-.coveragerc

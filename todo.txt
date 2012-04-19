@@ -1,4 +1,0 @@
-- Tagging
-- freie Metafelder
-    - Erscheinungsjahr
-    - 

@@ -3,3 +3,13 @@
   Showing of 'interpolate' filter:
   {{ 'Current version is v%VERSION%.' | interpolate }}
 </p>
+
+
+<div ng-init="friends = [{name:'John', age:25}, {name:'Mary', age:28}]">
+    I have {{friends.length}} friends. They are:
+    <ul>
+        <li ng-repeat="friend in friends">
+            [{{$index + 1}}] {{friend.name}} who is {{friend.age}} years old.
+        </li>
+    </ul>
+</div>
