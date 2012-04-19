@@ -19,4 +19,5 @@
 medienverwaltung-common/medienverwaltungcommon/local/*
 manage_local.py
 */build/*
+/out
 .directory

@@ -8,6 +8,7 @@ from pylons.controllers.util import abort
 from pylons.i18n import _, ungettext
 
 from medienverwaltungweb.lib.base import BaseController, render
+from medienverwaltungweb.lib.search import searchAmazon
 import medienverwaltungweb.lib.helpers as h
 from medienverwaltungweb.model import meta
 import medienverwaltungweb.model as model
@@ -28,11 +29,14 @@ class SearchController(BaseController):
         like_query = "%%%s%%" % query
         c.query = query
 
-        media_query = meta.Session\
+        local_media_query = meta.Session\
                           .query(model.Medium)\
                           .filter(or_(model.Medium.title.like(like_query),
                                       model.Medium.isbn.like(like_query)))
-        c.media_page = paginate.Page(media_query)
+        c.media_page = paginate.Page(local_media_query)
+
+        amazon_media_query = None
+        c.amazon_media_page = None
 
 
         persons_query = meta.Session\

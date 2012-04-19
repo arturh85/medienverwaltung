@@ -32,6 +32,7 @@ class AmazonController(BaseController):
     def index(self):
         return render('/amazon/add_these.mako')
 
+
     def add_one_post(self):
         add_this = request.params.get('add_this', None)
 
@@ -49,6 +50,23 @@ class AmazonController(BaseController):
                                     ResponseGroup="Images,ItemAttributes")
         c.item = node.Items.Item[0]
         return render('/amazon/item_lookup_result.mako')
+
+    def search(self, page=1):
+        query = request.params.get('query')
+        type = request.params.get('type', "Book")
+
+        node = self.api.item_search(search_index,
+            Title=query.encode('utf-8'),
+            ResponseGroup="Images,ItemAttributes",
+            ItemPage=page)
+        #~ c.items = node.Items.Item
+        # https://bitbucket.org/basti/python-amazon-product-api/issue/25/api-suddenly-not-working
+        for entry in node:
+            c.items = entry.Items.Item
+            break #just the first page
+
+        return render('/amazon/item_search_result.mako')
+
 
     def map_to_medium(self, id, page=1):
         """ id is media.id """
@@ -79,7 +97,7 @@ class AmazonController(BaseController):
                 break #just the first page
 
         except Exception, ex:
-            log.warn("Amzon Search error: %s" % ex)
+            log.warn("Amazon Search error: %s" % ex)
             c.items = []
 
         c.query = query
