@@ -10,7 +10,7 @@ Software to manage your media.
 State: Proof of concept, early stage.
 
 Using the code
-==============
+--------------
 
 ### Required Software for development:
 * http://nodejs.org/                
@@ -20,7 +20,7 @@ Using the code
 * http://angularjs.org/  
 
 Credits
-=======
+-------
 
 Credits to [dummy3k](https://github.com/dummy3k/medienverwaltung) for layout and idea
 
