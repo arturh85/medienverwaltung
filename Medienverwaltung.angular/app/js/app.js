@@ -13,3 +13,6 @@ angular.module('medienverwaltung', [
     $routeProvider.when('/media', {template: 'partials/media/browse.html', controller: MediaController});
     $routeProvider.otherwise({redirectTo: '/media'});
   }]);
+
+var cl = new CanvasLoader('canvasloader-container');
+cl.show(); // Hidden by default
