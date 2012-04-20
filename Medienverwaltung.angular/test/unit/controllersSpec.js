@@ -1,11 +1,11 @@
 /* jasmine specs for controllers go here */
 
-describe('MyCtrl1', function(){
+describe('MediaController', function(){
   var myCtrl1;
 
   beforeEach(function(){
       $scope = {};
-    myCtrl1 = new MyCtrl1($scope);
+    myCtrl1 = new MediaController($scope);
   });
 
 
@@ -15,13 +15,13 @@ describe('MyCtrl1', function(){
 });
 
 
-describe('MyCtrl2', function(){
+describe('ChatController', function(){
   var myCtrl2;
 
 
   beforeEach(function(){
 	$scope = {}
-    myCtrl2 = new MyCtrl2($scope);
+    myCtrl2 = new ChatController($scope);
     
   });
 
