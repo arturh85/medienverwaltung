@@ -1,7 +1,7 @@
 'use strict';
 /* App Controllers */
 
-var baseUrl = "/backend"
+var baseUrl = "http://localhost:8080/medienverwaltung"
 
 function MyCtrl1($scope, $http) {
     $http.get(baseUrl + "/media/books").
@@ -43,6 +43,23 @@ function MyCtrl1($scope, $http) {
 MyCtrl1.$inject = ["$scope", "$http"];
 
 
-function MyCtrl2() {
+function MyCtrl2($scope) {
+    var firebase = new Firebase(
+        'http://demo.firebase.com/arturh377997148');
+
+    $scope.messages = [];
+
+    $scope.send = function() {
+        console.log("sending " + $scope.username + ": " + $scope.chatText);
+        firebase.push({name: $scope.username, text: $scope.chatText});
+        $scope.chatText = "";
+    }
+
+    firebase.on('child_added', function(snapshot) {
+        var message = snapshot.val();
+        console.log("received: " + message);
+        $scope.messages.push(message);
+    });
+
 }
-MyCtrl2.$inject = [];
+MyCtrl2.$inject = ["$scope"];

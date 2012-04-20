@@ -9,8 +9,8 @@ describe('MyCtrl1', function(){
   });
 
 
-  it('should ....', function() {
-    //spec body
+  it('should fill the scope with an empty list', function() {
+    expect($scope.messages).toBeDefined();
   });
 });
 
@@ -20,7 +20,9 @@ describe('MyCtrl2', function(){
 
 
   beforeEach(function(){
-    myCtrl2 = new MyCtrl2();
+	$scope = {}
+    myCtrl2 = new MyCtrl2($scope);
+    
   });
 
 

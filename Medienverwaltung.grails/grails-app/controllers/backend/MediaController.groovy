@@ -4,8 +4,6 @@ import grails.converters.JSON
 
 class MediaController {
     def books() {
-        log.error("books()")
-
         if(request.postData) {
             log.error("ADDING book with isbn '${request.postData}'")
 
