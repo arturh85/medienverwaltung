@@ -1,32 +1,23 @@
 /* jasmine specs for controllers go here */
 
 describe('MediaController', function(){
-  var myCtrl1;
+  var mediaController;
 
   beforeEach(function(){
       $scope = {};
-    myCtrl1 = new MediaController($scope);
+      var mediaCollection = {
+          query: function() {
+
+          }
+      };
+      mediaController = new MediaController($scope, mediaCollection);
   });
 
 
-  it('should fill the scope with an empty list', function() {
-    expect($scope.messages).toBeDefined();
-  });
-});
-
-
-describe('ChatController', function(){
-  var myCtrl2;
-
-
-  beforeEach(function(){
-	$scope = {}
-    myCtrl2 = new ChatController($scope);
-    
-  });
-
-
-  it('should ....', function() {
-    //spec body
+  it('should fill the scope with methods', function() {
+    expect($scope.addByISBN).toBeDefined();
+    expect($scope.delete).toBeDefined();
+    expect($scope.reload).toBeDefined();
   });
 });
+
