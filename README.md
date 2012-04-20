@@ -1,29 +1,30 @@
 Medienverwaltung
-=====================================
+================
 
 Software to manage your media.
- - Easily scan the media items with barcodes you have via an Android or .NET application
- - Fetch information about the media via Amazon Product API
- - Use the cloud server or host your own instance (very easy!)
+ - Easily scan the media items with barcodes you have via an Android or Desktop application (planned!)
+ - Fetch information about the media via Amazon Product API (more planned!)
+ - Use the [cloud server](http://www.medienverwaltung.net) or host your own instance
  - Open Source Software under MIT license
 
 State: Proof of concept, early stage.
 
-
-
 Using the code
 ==============
 
-Frameworks:
-    http://angularjs.org/
+### Required Software for development:
+* http://nodejs.org/                
+* http://code.google.com/p/js-test-driver/
 
-Required Software:
-    http://nodejs.org/
-
+### Framework:
+* http://angularjs.org/  
 
 Credits
 =======
 
-Credits to dummy3k for layout and idea
+Credits to [dummy3k](https://github.com/dummy3k/medienverwaltung) for layout and idea
 
- - http://heartcode.robertpataki.com/canvasloader/
+### Libraries:
+* http://jquery.com/
+* http://heartcode.robertpataki.com/canvasloader/  
+* http://pivotal.github.com/jasmine/
