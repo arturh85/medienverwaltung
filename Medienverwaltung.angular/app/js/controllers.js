@@ -3,17 +3,30 @@
 
 var baseUrl = "http://localhost:8080/medienverwaltung"
 
-function MediaController($scope, MediaCollection) {
+function MediaController($scope, $route, MediaCollection) {
+    $scope.params = $route.current.params;
+
     $scope.loading = false;
 
     $scope.reload = function() {
         $scope.loading = true;
-        MediaCollection.query(function(medium) {
+        var query = {};
+        if($scope.params.type) {
+            if($scope.params.type == 'withoutImage') {
+                // TODO
+            } else {
+                query.type = $scope.params.type;
+                console.log("filtering by " + $scope.params.type);
+            }
+        }
+
+        MediaCollection.query(query, function(medium) {
             $scope.media = medium;
             $scope.loading = false;
             console.log("loaded media: " + medium.toString());
         });
     }
+
     $scope.addByISBN = function() {
         console.log("adding " + $scope.isbn);
         MediaCollection.save({isbn: $scope.isbn}, function(medium) {
@@ -21,6 +34,7 @@ function MediaController($scope, MediaCollection) {
             $scope.reload();
         });
     }
+
     $scope.delete = function(medium) {
         console.log("deleting " + medium.toString());
         medium.destroy(function(medium) {
@@ -31,7 +45,7 @@ function MediaController($scope, MediaCollection) {
 
     $scope.reload();
 }
-MediaController.$inject = ["$scope", "MediaCollection"];
+MediaController.$inject = ["$scope", "$route", "MediaCollection"];
 
 function LoginController($scope) {
 }

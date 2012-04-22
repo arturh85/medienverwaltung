@@ -10,6 +10,7 @@ angular.module('medienverwaltung', [
 ]).
   config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/login', {template: 'partials/login.html', controller: LoginController});
+    $routeProvider.when('/media/:type', {template: 'partials/media/browse.html', controller: MediaController});
     $routeProvider.when('/media', {template: 'partials/media/browse.html', controller: MediaController});
     $routeProvider.otherwise({redirectTo: '/media'});
   }]);

@@ -10,7 +10,13 @@ describe('MediaController', function(){
 
           }
       };
-      mediaController = new MediaController($scope, mediaCollection);
+
+      var $route = {
+          current: {
+              params: []
+          }
+      };
+      mediaController = new MediaController($scope, $route, mediaCollection);
   });
 
 
@@ -18,6 +24,8 @@ describe('MediaController', function(){
     expect($scope.addByISBN).toBeDefined();
     expect($scope.delete).toBeDefined();
     expect($scope.reload).toBeDefined();
+    expect($scope.loading).toBeDefined();
+    expect($scope.params).toBeDefined();
   });
 });
 
