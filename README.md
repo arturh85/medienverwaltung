@@ -13,11 +13,20 @@ Using the code
 --------------
 
 ### Required Software for development:
-* http://nodejs.org/                
+* http://nodejs.org/
+* http://www.mongodb.org/
 * http://code.google.com/p/js-test-driver/
 
 ### Framework:
-* http://angularjs.org/  
+* http://angularjs.org/
+
+Setting up development environment:
+-----------------------------------
+
+* install nodejs
+* cd to backend directory of angular project
+* run 'npm install'
+* open index.html in browser
 
 Credits
 -------
