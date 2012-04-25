@@ -21,4 +21,4 @@ app.get('/api', function (req, res) {
 });
 
 // Launch server
-app.listen(4242) ;
+app.listen(4242);
