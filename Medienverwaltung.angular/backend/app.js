@@ -1,25 +1,23 @@
-var fs = require('fs'),
-    sys = require('sys'),
+var application_root = __dirname,
+    fs = require('fs'),
+    sys = require('util'),
+    path = require('path'),
     extname = require('path').extname;
-
-// bootstrap 3rd-party libraries
-require.paths.unshift(__dirname+'/support/');
-require.paths.unshift(__dirname+'/support/mongoose/');
 
 // include 3rd-party libraries
 var express = require('express'),
-    mongoose = require('mongoose').Mongoose;
+    mongoose = require('mongoose');
 
 // create server
 var app = module.exports.app = express.createServer();
 
 // configure server
-app.use(express.bodyDecoder());
+app.use(express.bodyParser());
 app.use(express.compiler({ enable: true }));
-app.use(express.conditionalGet());
-app.use(express.gzip());
+app.use(express.router);
+//app.use(express.gzip());
 app.use(express.methodOverride());
-app.use(express.staticProvider(__dirname+'/public'));
+app.use(express.static(path.join(application_root, "public")));
 app.set('views', __dirname+'/views');
 
 // load configuration
@@ -192,4 +190,4 @@ if (cfg.loader.use_default_controller) {
 }
 
 // start server
-app.listen(cfg.server.port /* , cfg.server.addr */);
+app.listen(cfg.server.port, cfg.server.addr);
