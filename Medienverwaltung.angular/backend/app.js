@@ -13,11 +13,10 @@ var app = module.exports.app = express.createServer();
 
 // configure server
 app.use(express.bodyParser());
-app.use(express.compiler({ enable: true }));
-app.use(express.router);
-//app.use(express.gzip());
 app.use(express.methodOverride());
+app.use(app.router);
 app.use(express.static(path.join(application_root, "public")));
+app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 app.set('views', __dirname+'/views');
 
 // load configuration
@@ -89,7 +88,7 @@ cfg.loader.controllers.forEach(loader);
 // load default controller
 if (cfg.loader.use_default_controller) {
   // FIND
-  app.get('/:collection', function(req, res, next) {
+  app.get('/api/:collection', function(req, res, next) {
     var col = db.model(req.params.collection),
         qw = col.find();
 
@@ -125,7 +124,7 @@ if (cfg.loader.use_default_controller) {
   });
 
   // READ
-  app.get('/:collection/:id', function(req, res, next) {
+  app.get('/api/:collection/:id', function(req, res, next) {
     var col = db.model(req.params.collection);
 
     col.findById(req.params.id, function(doc) {
@@ -141,17 +140,18 @@ if (cfg.loader.use_default_controller) {
   // CREATE
   var createDoc = function(req, res, next) {
     var col = db.model(req.params.collection),
-        doc = new col;
+        doc = new col(req.params);
 
-    doc.merge(req.param(req.params.collection));
+      // TODO: is merging necessary?
+    //doc.merge(req.param(req.params.collection));
 
     doc.save(function() {
       res.send(doc.toObject(), 201);
     });
   };
 
-  app.put('/:collection', createDoc);
-  app.post('/:collection', createDoc);
+  app.put('/api/:collection', createDoc);
+  app.post('/api/:collection', createDoc);
 
   // MODIFY
   var modifyDoc = function(req, res, next) {
@@ -170,11 +170,11 @@ if (cfg.loader.use_default_controller) {
     });
   };
 
-  app.put('/:collection/:id', modifyDoc);
-  app.post('/:collection/:id', modifyDoc);
+  app.put('/api/:collection/:id', modifyDoc);
+  app.post('/api/:collection/:id', modifyDoc);
 
   // REMOVE
-  app.del('/:collection/:id', function(req, res, next) {
+  app.del('/api/:collection/:id', function(req, res, next) {
     var col = db.model(req.params.collection);
 
     col.findById(req.params.id, function(doc) {
