@@ -1,4 +1,5 @@
 atlassian-ide-plugin.xml
+node_modules
 *.db
 *.gz
 *.swp

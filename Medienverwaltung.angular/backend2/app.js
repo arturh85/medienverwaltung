@@ -1,11 +1,8 @@
 var application_root = __dirname,
     express = require("express"),
-    path = require("path"),
-    mongoose = require('mongoose');
+    path = require("path");
 
 var app = express.createServer();
-// Database
-mongoose.connect('mongodb://localhost/medienverwaltung');
 
 // Config
 app.configure(function () {
@@ -16,9 +13,9 @@ app.configure(function () {
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 
-app.get('/api', function (req, res) {
+app.get('/media', function (req, res) {
     res.send('Ecomm API is running');
 });
 
 // Launch server
-app.listen(4242);
+app.listen("127.0.0.1", 4242);
