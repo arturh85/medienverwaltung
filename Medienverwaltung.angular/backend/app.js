@@ -77,7 +77,11 @@ app.error(function(err, req, res) {
 });
 
 // open db connection
-var db = module.exports.db = mongoose.connect('mongodb://'+cfg.mongo.host+':'+cfg.mongo.port+'/'+cfg.mongo.name);
+var mongoUrl = 'mongodb://'+cfg.mongo.host+':'+cfg.mongo.name;
+var db = module.exports.db = mongoose.connect(mongoUrl);
+
+
+console.log("mongoUrl: " + mongoUrl + " = " + db);
 
 // load models
 cfg.loader.models.forEach(loader);
@@ -89,8 +93,12 @@ cfg.loader.controllers.forEach(loader);
 if (cfg.loader.use_default_controller) {
   // FIND
   app.get('/api/:collection', function(req, res, next) {
+      console.log("list: " + req.params.collection);
     var col = db.model(req.params.collection),
         qw = col.find();
+
+
+      console.log("list2");
 
     if (req.param('query')) {
       qw.where(req.param('query'));
@@ -112,9 +120,12 @@ if (cfg.loader.use_default_controller) {
       qw.skip(req.param('offset'));
     }
 
+      console.log("list3");
     qw.all(function(docs) {
+        console.log("list5");
       var ret = [];
       docs.forEach(function(doc) {
+          console.log("list4");
         ret.push(doc.toObject());
       });
 
@@ -191,3 +202,5 @@ if (cfg.loader.use_default_controller) {
 
 // start server
 app.listen(cfg.server.port, cfg.server.addr);
+
+console.log("server started on http://" + cfg.server.addr + ":" + cfg.server.port);
