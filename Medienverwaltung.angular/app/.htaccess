@@ -1,0 +1,8 @@
+Options +FollowSymLinks -Indexes -MultiViews
+
+<IfModule mod_rewrite.c>
+    RewriteEngine on
+
+    # Redirect a whole subdirectory:
+    RewriteRule ^api/(.+) http://localhost:3000/api/$1 [P]
+</IfModule>
