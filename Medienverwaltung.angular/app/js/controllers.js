@@ -37,8 +37,9 @@ function MediaController($scope, $route, MediaCollection) {
 
     $scope.delete = function(medium) {
         console.log("deleting " + medium.toString());
-        medium.destroy(function(medium) {
-            console.log("deleted: " + medium.toString());
+
+        medium.$delete({id:medium._id}, function() {
+            console.log("success");
             $scope.reload();
         });
     }
