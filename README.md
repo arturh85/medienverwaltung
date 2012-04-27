@@ -24,9 +24,12 @@ Setting up development environment:
 -----------------------------------
 
 * install nodejs
+* install/start mongodb
 * cd to backend directory of angular project
 * run 'npm install'
-* open index.html in browser
+* run 'node app.js'
+* open http://localhost:3000 in browser
+
 
 Credits
 -------
@@ -34,6 +37,8 @@ Credits
 Credits to [dummy3k](https://github.com/dummy3k/medienverwaltung) for layout and idea
 
 ### Libraries:
-* http://jquery.com/
 * http://heartcode.robertpataki.com/canvasloader/  
 * http://pivotal.github.com/jasmine/
+* http://mongoosejs.com/
+* http://expressjs.com/
+* http://jquery.com/
