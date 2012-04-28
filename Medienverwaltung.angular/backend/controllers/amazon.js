@@ -1,17 +1,16 @@
 var app = module.parent.exports.app,
-    db = module.parent.exports.db;
+    db = module.parent.exports.db,
+    cfg = module.parent.exports.cfg;
 
-console.log("app: " + app.toString());
+var aws = require("aws-lib");
 
-app.get('/amazon/search', function(req, res) {
-    var prodAdv = aws.createProdAdvClient(yourAccessKeyId, yourSecretAccessKey, yourAssociateTag);
+app.get('/amazon/search/:query', function(req, res) {
+    console.log("GET /amazon/search/" + req.params.query);
+    var prodAdv = aws.createProdAdvClient(cfg.amazon.accessKeyId, cfg.amazon.secretAccessKey, cfg.amazon.associateTag);
 
-    prodAdv.call("ItemSearch", {SearchIndex: "Books", Keywords: "Javascript"}, function(err, result) {
-        console.log(JSON.stringify(result));
-    })
-
-    var ret = [];
-
-    res.header('Content-Type', 'application/json');
-    res.send(ret, 200);
+    prodAdv.call("ItemSearch", {SearchIndex: "Books", Title: req.params.query, ResponseGroup: "Images,ItemAttributes"}, function(err, result) {
+        var ret = result.Items.Item;
+        res.header('Content-Type', 'application/json');
+        res.send(ret, 200);
+    });
 });

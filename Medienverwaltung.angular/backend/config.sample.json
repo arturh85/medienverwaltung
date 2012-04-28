@@ -17,5 +17,11 @@
     "server": {
         "addr": "localhost",
         "port": 3000
+    },
+
+    "amazon": {
+        "accessKeyId": "",
+        "secretAccessKey": "",
+        "associateTag": ""
     }
 }

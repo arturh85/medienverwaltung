@@ -1,12 +1,21 @@
 'use strict';
 /* App Controllers */
 
-var baseUrl = "http://localhost:8080/medienverwaltung"
-
-function MediaListController($scope, $route, MediaCollection) {
+function MediaListController($scope, $route, MediaCollection, $http) {
     $scope.params = $route.current.params;
 
     $scope.loading = false;
+    $scope.amazonResults = [];
+
+    $scope.searchAmazon = function() {
+        $http({method: 'GET', url: '/amazon/search/'+ $scope.query}).
+            success(function(data, status, headers, config) {
+                $scope.amazonResults = data;
+            }).
+            error(function(data, status, headers, config) {
+                console.log("failed");
+            });
+    };
 
     $scope.reload = function() {
         $scope.loading = true;
@@ -25,7 +34,7 @@ function MediaListController($scope, $route, MediaCollection) {
             $scope.loading = false;
             console.log("loaded media: " + medium.toString());
         });
-    }
+    };
 
     $scope.addByISBN = function() {
         console.log("adding " + $scope.isbn);
@@ -34,7 +43,7 @@ function MediaListController($scope, $route, MediaCollection) {
             $scope.isbn = '';
             $scope.reload();
         });
-    }
+    };
 
     $scope.delete = function(medium) {
         console.log("deleting " + medium.toString());
@@ -43,11 +52,11 @@ function MediaListController($scope, $route, MediaCollection) {
             console.log("success");
             $scope.reload();
         });
-    }
+    };
 
     $scope.reload();
 }
-MediaListController.$inject = ["$scope", "$route", "MediaCollection"];
+MediaListController.$inject = ["$scope", "$route", "MediaCollection", "$http"];
 
 function MediaEditController($scope, $route, MediaCollection) {
     $scope.params = $route.current.params;
