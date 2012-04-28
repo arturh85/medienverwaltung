@@ -1,0 +1,17 @@
+<form name="myForm">
+    <div class="control-group" ng-class="{error: myForm.isbn.$invalid}">
+        <label>ISBN</label>
+        <input type="text" name="isbn" ng-model="media.isbn" required>
+
+        <span ng-show="myForm.isbn.$error.required" class="help-inline">
+            Required
+        </span>
+    </div>
+
+    <br>
+    <a href="#/media" class="btn">Cancel</a>
+    <button ng-click="save()" ng-disabled="isClean() || myForm.$invalid"
+            class="btn btn-primary">Save</button>
+    <button ng-click="destroy()"
+            ng-show="media._id" class="btn btn-danger">Delete</button>
+</form>

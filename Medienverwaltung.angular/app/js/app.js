@@ -10,10 +10,13 @@ angular.module('medienverwaltung', [
 ]).
   config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/login', {template: 'partials/login.html', controller: LoginController});
-    $routeProvider.when('/media/:type', {template: 'partials/media/browse.html', controller: MediaController});
-    $routeProvider.when('/media', {template: 'partials/media/browse.html', controller: MediaController});
+    $routeProvider.when('/media/edit/:id', {template: 'partials/media/form.html', controller: MediaEditController});
+    $routeProvider.when('/media/:type', {template: 'partials/media/browse.html', controller: MediaListController});
+    $routeProvider.when('/media', {template: 'partials/media/browse.html', controller: MediaListController});
     $routeProvider.otherwise({redirectTo: '/media'});
   }]);
 
+/*
 var cl = new CanvasLoader('canvasloader-container');
 cl.show(); // Hidden by default
+  */

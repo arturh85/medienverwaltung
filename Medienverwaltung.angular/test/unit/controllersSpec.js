@@ -1,6 +1,6 @@
 /* jasmine specs for controllers go here */
 
-describe('MediaController', function(){
+describe('MediaListController', function(){
   var mediaController;
 
   beforeEach(function(){
@@ -16,7 +16,7 @@ describe('MediaController', function(){
               params: []
           }
       };
-      mediaController = new MediaController($scope, $route, mediaCollection);
+      mediaController = new MediaListController($scope, $route, mediaCollection);
   });
 
 

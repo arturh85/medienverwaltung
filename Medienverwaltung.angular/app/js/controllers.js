@@ -3,7 +3,7 @@
 
 var baseUrl = "http://localhost:8080/medienverwaltung"
 
-function MediaController($scope, $route, MediaCollection) {
+function MediaListController($scope, $route, MediaCollection) {
     $scope.params = $route.current.params;
 
     $scope.loading = false;
@@ -31,6 +31,7 @@ function MediaController($scope, $route, MediaCollection) {
         console.log("adding " + $scope.isbn);
         MediaCollection.save({isbn: $scope.isbn}, function(medium) {
             console.log("added: " + medium.toString());
+            $scope.isbn = '';
             $scope.reload();
         });
     }
@@ -46,7 +47,33 @@ function MediaController($scope, $route, MediaCollection) {
 
     $scope.reload();
 }
-MediaController.$inject = ["$scope", "$route", "MediaCollection"];
+MediaListController.$inject = ["$scope", "$route", "MediaCollection"];
+
+function MediaEditController($scope, $route, MediaCollection) {
+    $scope.params = $route.current.params;
+
+    MediaCollection.get({id: $scope.params.id}, function(media) {
+        this.original = media;
+        $scope.media = new MediaCollection(self.original);
+    });
+
+    $scope.isClean = function() {
+        return angular.equals(self.original, $scope.project);
+    }
+
+    $scope.destroy = function() {
+        self.original.destroy(function() {
+            $location.path('/list');
+        });
+    };
+
+    $scope.save = function() {
+        $scope.project.update(function() {
+            $location.path('/list');
+        });
+    };
+}
+MediaEditController.$inject = ["$scope", "$route", "MediaCollection"];
 
 function LoginController($scope) {
 }

@@ -128,39 +128,34 @@ if (cfg.loader.use_default_controller) {
 
             var ret = [];
             docs.forEach(function (doc) {
+                console.log(" - found: " + doc.toString());
                 ret.push(doc.toObject());
             });
+
+            if(ret.length == 0) {
+                console.log(" - no results");
+            }
 
             res.header('Content-Type', 'application/json');
             res.send(ret, 200);
         });
-
-        /*
-         var ret = [];
-
-         col.find({}, function (err, docs) {
-         if (err) {
-         throw err;
-         } else {
-         docs.forEach(function (doc) {
-         ret.push(doc.toObject());
-         });
-
-         res.header('Content-Type', 'application/json');
-         res.send(ret, 200);
-         }
-         });
-         */
     });
 
     // READ
     app.get('/api/:collection/:id', function (req, res, next) {
+        console.log("GET /api/" + req.params.collection + "/" + req.params.id);
         var col = db.model(req.params.collection);
 
-        col.findById(req.params.id, function (doc) {
+        col.findById(req.params.id, function (err, doc) {
+            if(err) {
+                throw err;
+            }
+
             if (!doc) {
+                console.log(" - not found");
                 next(new NotFound);
             } else {
+                console.log(" - found: " + doc.toString());
                 res.header('Content-Type', 'application/json');
                 res.send(doc.toObject(), 200);
             }
@@ -169,13 +164,16 @@ if (cfg.loader.use_default_controller) {
 
     // CREATE
     var createDoc = function (req, res, next) {
-        console.log("PUT /api/" + req.params.collection);
         var col = db.model(req.params.collection),
             doc = new col(req.body);
 
-        console.log("object: " + doc.toString());
+        console.log("PUT /api/" + req.params.collection + " -> " + doc.toString());
 
-        doc.save(function () {
+        doc.save(function (err) {
+            if(err) {
+                throw err;
+            }
+
             res.send(doc.toObject(), 201);
         });
     };
@@ -185,12 +183,19 @@ if (cfg.loader.use_default_controller) {
 
     // MODIFY
     var modifyDoc = function (req, res, next) {
+        console.log("PUT /api/" + req.params.collection + "/" + req.params.id);
         var col = db.model(req.params.collection);
 
-        col.findById(req.params.id, function (doc) {
+        col.findById(req.params.id, function (err, doc) {
+            if(err) {
+                throw err;
+            }
+
             if (!doc) {
+                console.log(" - not found");
                 next(new NotFound);
             } else {
+                console.log(" - no results");
                 doc.merge(req.param(req.params.collection));
 
                 doc.save(function () {
@@ -210,10 +215,17 @@ if (cfg.loader.use_default_controller) {
         var col = db.model(req.params.collection);
 
         col.findById(req.params.id, function (err, doc) {
+            if(err) {
+                throw err;
+            }
+
             if (!doc) {
+                console.log(" - not found");
                 next(new NotFound);
             } else {
+                console.log(" - found: " + doc.toString());
                 doc.remove(function () {
+                    console.log(" - removed");
                     res.send('200 OK', 200);
                 });
             }

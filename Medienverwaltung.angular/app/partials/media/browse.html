@@ -14,7 +14,7 @@ type: "{{ params | json  }}"
         </span>
 
         <span ng-show="!medium.type">
-            ISBN {{ medium.isbn }}
+            ISBN <a ng-href="#/media/edit/{{ medium._id }}">{{ medium.isbn }}</a></span>
         </span>
 
         <img class="ui-icon-trash" ng-click="delete(medium)" />
