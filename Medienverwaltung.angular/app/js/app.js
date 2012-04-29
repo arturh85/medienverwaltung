@@ -1,4 +1,4 @@
-/*global  */
+/*global  LoginController: true, MediaEditController: true, MediaListController: true */
 
 (function () {
     "use strict";

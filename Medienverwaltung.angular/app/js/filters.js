@@ -1,4 +1,5 @@
-'use strict';
+(function () {
+    "use strict";
 /* http://docs-next.angularjs.org/api/angular.module.ng.$filter */
 
 angular.module('medienverwaltung.filters', []).
@@ -7,3 +8,5 @@ angular.module('medienverwaltung.filters', []).
       return String(text).replace(/\%VERSION\%/mg, version);
     }
   }]);
+
+}());

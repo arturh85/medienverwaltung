@@ -13,7 +13,7 @@
 
     <target name="run-jslint" depends="clean">
         <mkdir dir="reports" />
-        <jslint options="white,undef,plusplus,newcap,indent=4">
+        <jslint options="white,undef,plusplus,newcap,vars,indent=4">
             <predef>jQuery, setTimeout, history, window, document, angular</predef>
             <formatter type="junit" destfile="${reports.dir}" />
 
@@ -22,6 +22,7 @@
                 <exclude name="**/*.min.js" />
                 <exclude name="backend/node_modules/**/*.js" />
                 <exclude name="app/lib/angular/*.js" />
+                <exclude name="app/js/jcrop/js/*.js" />
             </fileset>
         </jslint>
     </target>
