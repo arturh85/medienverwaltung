@@ -6,7 +6,8 @@
         fs = require('fs'),
         sys = require('util'),
         path = require('path'),
-        extname = require('path').extname;
+        extname = require('path').extname,
+        cfg;
 
     // include 3rd-party libraries
     var express = require('express'),
@@ -25,7 +26,7 @@
 
     // load configuration
     try {
-        var cfg = module.exports.cfg = JSON.parse(fs.readFileSync(__dirname + '/config.json').toString());
+        cfg = module.exports.cfg = JSON.parse(fs.readFileSync(__dirname + '/config.json').toString());
     } catch (e) {
         throw new Error("File config.json not found. Try: 'cp config.json.sample config.json'");
     }
