@@ -7,29 +7,15 @@
 <TextView  
     android:layout_width="fill_parent" 
     android:layout_height="wrap_content" 
-    android:text="Hello World, MyActivity"
+    android:text="Medienverwaltung Scanner"
     />
 
 
     <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Scan"
-            android:onClick="selfDestruct"
-            />
-
-    <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Fetch Jason"
-            android:onClick="JsonApi"
-            />
-
-    <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Scan Result for 3442367263"
-            android:onClick="Scan3442367263"
+            android:text="Scan Books"
+            android:onClick="scanBooks"
             />
 
 </LinearLayout>
