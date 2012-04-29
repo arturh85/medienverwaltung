@@ -41,4 +41,6 @@ Credits to [dummy3k](https://github.com/dummy3k/medienverwaltung) for layout and
 * http://pivotal.github.com/jasmine/
 * http://mongoosejs.com/
 * http://expressjs.com/
+* https://github.com/livelycode/aws-lib
+* https://github.com/robertjd/everyauth/
 * http://jquery.com/

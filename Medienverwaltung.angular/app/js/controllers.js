@@ -58,16 +58,33 @@ function MediaListController($scope, $route, MediaCollection, $http) {
 }
 MediaListController.$inject = ["$scope", "$route", "MediaCollection", "$http"];
 
-function MediaEditController($scope, $route, MediaCollection) {
+function MediaEditController($scope, $route, MediaCollection, $http) {
+    var self = this;
     $scope.params = $route.current.params;
 
+    $scope.amazonData = {};
+
     MediaCollection.get({id: $scope.params.id}, function(media) {
-        this.original = media;
+        self.original = media;
         $scope.media = new MediaCollection(self.original);
+
+        if($scope.media.isbn) {
+            $http({method: 'GET', url: '/amazon/isbn/'+ $scope.media.isbn}).
+                success(function(data, status, headers, config) {
+                    $scope.amazonData = data;
+                }).
+                error(function(data, status, headers, config) {
+                    console.log("failed");
+                });
+        }
     });
 
     $scope.isClean = function() {
         return angular.equals(self.original, $scope.project);
+    }
+
+    $scope.isImageProperty = function(property) {
+        return property.indexOf("Image") != -1
     }
 
     $scope.destroy = function() {
@@ -82,7 +99,7 @@ function MediaEditController($scope, $route, MediaCollection) {
         });
     };
 }
-MediaEditController.$inject = ["$scope", "$route", "MediaCollection"];
+MediaEditController.$inject = ["$scope", "$route", "MediaCollection", "$http"];
 
 function LoginController($scope) {
 }

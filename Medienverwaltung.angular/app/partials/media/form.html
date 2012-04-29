@@ -15,3 +15,31 @@
     <button ng-click="destroy()"
             ng-show="media._id" class="btn btn-danger">Delete</button>
 </form>
+
+<div>
+    <table>
+        <tr ng-repeat="(property, value) in amazonData">
+            <th>{{property}}</th>
+
+            <td>
+                <span g-switch-when="settings" ng-show="isImageProperty(property)">
+                    <img ng-src="{{value.URL}}" />
+                </span>
+
+                <span ng-show="property == 'ItemAttributes'">
+                    <table>
+                        <tr ng-repeat="(property2, value2) in value">
+                            <th>{{property2}}</th>
+                            <td>{{value2}}</td>
+                        </tr>
+                    </table>
+                </span>
+
+                <span ng-show="!isImageProperty(property) && property != 'ItemAttributes'">
+                    {{value}}
+                </span>
+            </td>
+        </tr>
+    </table>
+    </table>
+</div>
