@@ -1,4 +1,4 @@
-/* global MediaListController: true */
+/*global MediaListController: true */
 
 (function () {
     "use strict";
