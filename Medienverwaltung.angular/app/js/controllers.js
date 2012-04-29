@@ -84,7 +84,7 @@
         };
 
         $scope.isImageProperty = function(property) {
-            return property.indexOf("Image") != -1
+            return property.indexOf("Image") !== -1;
         };
 
         $scope.destroy = function() {

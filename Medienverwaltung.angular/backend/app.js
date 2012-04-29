@@ -1,3 +1,5 @@
+/* es5: true */
+
 var application_root = __dirname,
     fs = require('fs'),
     sys = require('util'),
