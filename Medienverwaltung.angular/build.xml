@@ -21,7 +21,9 @@
                 <include name="**/*.js" />
                 <exclude name="**/*.min.js" />
                 <exclude name="backend/node_modules/**/*.js" />
+                <exclude name="backend/public/**/*.js" />
                 <exclude name="app/lib/angular/*.js" />
+                <exclude name="test/lib/angular/*.js" />
                 <exclude name="app/js/jcrop/js/*.js" />
             </fileset>
         </jslint>

@@ -1,7 +1,11 @@
-var mongoose = require("mongoose");
+(function () {
+    "use strict";
 
-var Media = new mongoose.Schema({
-    isbn: String
-});
+    var mongoose = require("mongoose");
 
-mongoose.model('media', Media);
+    var Media = new mongoose.Schema({
+        isbn: String
+    });
+
+    mongoose.model('media', Media);
+}());
