@@ -1,17 +1,22 @@
-/* jasmine specs for filters go here */
+(function () {
+    "use strict";
 
-describe('filter', function() {
-  beforeEach(module('medienverwaltung.filters'));
+    /* jasmine specs for filters go here */
 
-
-  describe('interpolate', function() {
-    beforeEach(module(function($provide) {
-      $provide.value('version', 'TEST_VER');
-    }));
+    describe('filter', function() {
+      beforeEach(module('medienverwaltung.filters'));
 
 
-    it('should replace VERSION', inject(function(interpolateFilter) {
-      expect(interpolateFilter('before %VERSION% after')).toEqual('before TEST_VER after');
-    }));
-  });
-});
+      describe('interpolate', function() {
+        beforeEach(module(function($provide) {
+          $provide.value('version', 'TEST_VER');
+        }));
+
+
+        it('should replace VERSION', inject(function(interpolateFilter) {
+          expect(interpolateFilter('before %VERSION% after')).toEqual('before TEST_VER after');
+        }));
+      });
+    });
+
+}());

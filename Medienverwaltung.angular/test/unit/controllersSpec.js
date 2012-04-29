@@ -1,31 +1,36 @@
-/* jasmine specs for controllers go here */
+(function () {
+    "use strict";
 
-describe('MediaListController', function(){
-  var mediaController;
+    /* jasmine specs for controllers go here */
 
-  beforeEach(function(){
-      $scope = {};
-      var mediaCollection = {
-          query: function() {
+    describe('MediaListController', function(){
+      var mediaController;
+      var $scope = {};
 
-          }
-      };
+      beforeEach(function(){
+          var mediaCollection = {
+              query: function() {
 
-      var $route = {
-          current: {
-              params: []
-          }
-      };
-      mediaController = new MediaListController($scope, $route, mediaCollection);
-  });
+              }
+          };
+
+          var $route = {
+              current: {
+                  params: []
+              }
+          };
+          mediaController = new MediaListController($scope, $route, mediaCollection);
+      });
 
 
-  it('should fill the scope with methods', function() {
-    expect($scope.addByISBN).toBeDefined();
-    expect($scope.delete).toBeDefined();
-    expect($scope.reload).toBeDefined();
-    expect($scope.loading).toBeDefined();
-    expect($scope.params).toBeDefined();
-  });
-});
+      it('should fill the scope with methods', function() {
+        expect($scope.addByISBN).toBeDefined();
+        expect($scope.delete).toBeDefined();
+        expect($scope.reload).toBeDefined();
+        expect($scope.loading).toBeDefined();
+        expect($scope.params).toBeDefined();
+      });
+    });
 
+
+}());
