@@ -21,8 +21,8 @@
             $scope.loading = true;
             var query = {};
             if($scope.params.type) {
-                if($scope.params.type == 'withoutImage') {
-                    // TODO
+                if($scope.params.type === 'withoutImage') {
+                    query.image = undefined;
                 } else {
                     query.type = $scope.params.type;
                     console.log("filtering by " + $scope.params.type);
@@ -48,7 +48,7 @@
         $scope.delete = function(medium) {
             console.log("deleting " + medium.toString());
 
-            medium.$delete({id:medium._id}, function() {
+            medium.$delete({id: medium._id}, function() {
                 console.log("success");
                 $scope.reload();
             });
