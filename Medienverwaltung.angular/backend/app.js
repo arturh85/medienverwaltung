@@ -38,7 +38,7 @@
             }
 
             files.forEach(function (file) {
-                if (extname(file) == '.js') {
+                if (extname(file) === '.js') {
                     require(dir + '/' + file.replace('.js', ''));
                 }
             });
@@ -46,7 +46,7 @@
     };
 
     // enable debugger
-    if (true == cfg.debug) {
+    if (true === cfg.debug) {
         app.use(express.errorHandler({
             showStack:true,
             dumpExceptions:true
