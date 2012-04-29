@@ -3,7 +3,8 @@
 
     var app = module.parent.exports.app,
         db = module.parent.exports.db,
-        cfg = module.parent.exports.cfg;
+        cfg = module.parent.exports.cfg,
+        NotFound = module.parent.exports.nf;
 
     var aws = require("aws-lib");
     var prodAdv = aws.createProdAdvClient(cfg.amazon.accessKeyId, cfg.amazon.secretAccessKey, cfg.amazon.associateTag);
@@ -38,7 +39,7 @@
                     console.log(error.Message);
                 });
 
-                next(new NotFound);
+                next(new NotFound());
             } else {
                 var ret = result.Items.Item;
                 res.header('Content-Type', 'application/json');
