@@ -13,7 +13,7 @@
 
     <target name="run-jslint" depends="clean">
         <mkdir dir="reports" />
-        <jslint options="white,undef,plusplus,newcap,vars,nomen,indent=4">
+        <jslint options="es5,white,undef,plusplus,newcap,vars,nomen,indent=4">
             <predef>jQuery, setTimeout, history, window, document, angular, console, __dirname, require, module, browser, element, describe, beforeEach, it, expect, inject</predef>
             <formatter type="junit" destfile="${reports.dir}" />
 
