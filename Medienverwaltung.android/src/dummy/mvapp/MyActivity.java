@@ -28,7 +28,7 @@ import java.net.URI;
 public class MyActivity extends Activity
 {
     private static final String TAG = "MyActivity";
-    private static final String API_BASE_URL = "http://www.medienverwaltung.net"
+    private static final String API_BASE_URL = "http://www.medienverwaltung.net";
 
     /** Called when the activity is first created. */
     @Override
