@@ -1,10 +1,12 @@
+var browser, element;
+
 (function () {
     "use strict";
 
     describe('my app', function() {
 
       beforeEach(function() {
-        browser().navigateTo('../../app/index.html');
+          browser().navigateTo('../../app/index.html');
       });
 
 
