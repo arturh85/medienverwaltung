@@ -55,14 +55,14 @@
     }
 
     // enable logger
-    if (true == cfg.logger) {
+    if (true === cfg.logger) {
         app.use(express.logger());
     }
 
     var NotFound = module.exports.nf = function (msg) {
         this.name = 'NotFound';
         Error.call(this, msg);
-        Error.captureStackTrace(this, arguments.callee);
+        //Error.captureStackTrace(this, arguments.callee);
     };
 
     sys.inherits(NotFound, Error);
