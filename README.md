@@ -26,6 +26,7 @@ Setting up development environment:
 * install nodejs
 * install/start mongodb
 * cd to backend directory of angular project
+* copy config.sample.json to config.json and add your Amazon API secrets
 * run 'npm install'
 * run 'node app.js'
 * open http://localhost:3000 in browser
