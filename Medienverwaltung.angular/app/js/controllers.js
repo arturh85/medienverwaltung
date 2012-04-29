@@ -45,7 +45,7 @@
             });
         };
 
-        $scope.delete = function(medium) {
+        $scope.deleteMedium = function(medium) {
             console.log("deleting " + medium.toString());
 
             medium.$delete({id: medium._id}, function() {
@@ -58,7 +58,7 @@
     }
     MediaListController.$inject = ["$scope", "$route", "MediaCollection", "$http"];
 
-    function MediaEditController($scope, $route, MediaCollection, $http) {
+    function MediaEditController($scope, $route, MediaCollection, $http, $location) {
         var self = this;
         $scope.params = $route.current.params;
 
@@ -81,11 +81,11 @@
 
         $scope.isClean = function() {
             return angular.equals(self.original, $scope.project);
-        }
+        };
 
         $scope.isImageProperty = function(property) {
             return property.indexOf("Image") != -1
-        }
+        };
 
         $scope.destroy = function() {
             self.original.destroy(function() {
@@ -99,7 +99,7 @@
             });
         };
     }
-    MediaEditController.$inject = ["$scope", "$route", "MediaCollection", "$http"];
+    MediaEditController.$inject = ["$scope", "$route", "MediaCollection", "$http", "$location"];
 
     function LoginController($scope) {
     }
