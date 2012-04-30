@@ -29,7 +29,14 @@ Setting up development environment:
 * copy config.sample.json to config.json and add your Amazon API secrets
 * run 'npm install'
 * run 'node app.js'
+* (optionally) run 'npm install -g supervisor' and use 'supervisor app.js' to reload changes automatically
 * open http://localhost:3000 in browser
+
+Running tests:
+--------------
+
+* run 'npm install -g jshint'
+
 
 
 Credits
