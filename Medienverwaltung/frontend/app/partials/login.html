@@ -1,0 +1,23 @@
+<form name="myForm">
+    <div class="control-group" ng-class="{error: myForm.username.$invalid}">
+        <label>E-Mail</label>
+        <input type="text" name="email" ng-model="email" required>
+
+        <span ng-show="myForm.email.$error.required" class="help-inline">
+            Required
+        </span>
+    </div>
+
+    <div class="control-group" ng-class="{error: myForm.password.$invalid}">
+        <label>Password</label>
+        <input type="password" name="password" ng-model="password" required>
+
+        <span ng-show="myForm.password.$error.required" class="help-inline">
+            Required
+        </span>
+    </div>
+
+    <br>
+    <button ng-click="login()" ng-disabled="isClean() || myForm.$invalid"
+            class="btn btn-primary">Save</button>
+</form>

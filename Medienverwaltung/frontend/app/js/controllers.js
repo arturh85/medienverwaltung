@@ -98,9 +98,55 @@ function MediaEditController($scope, $route, MediaCollection, $http, $location) 
 }
 MediaEditController.$inject = ["$scope", "$route", "MediaCollection", "$http", "$location"];
 
-function LoginController($scope) {
+function LoginController($scope, $http, $location) {
+    $scope.email = "";
+    $scope.password = "";
+
+    $scope.login = function() {
+        var data = {email: $scope.email, password: $scope.password};
+        var config = {};
+
+        $http.post('/login', data, config).
+            success(function(data, status, headers, config) {
+                if(data.success) {
+                    console.log("login successful");
+                    $location.path("/media");
+                } else {
+                    console.log("login failed: " + data.toString());
+                }
+            }).
+            error(function(data, status, headers, config) {
+                console.log("failed");
+            });
+    }
 }
-LoginController.$inject = ["$scope"];
+LoginController.$inject = ["$scope", "$http", "$location"];
+
+function RegisterController($scope) {
+    $scope.email = "";
+    $scope.password = "";
+
+    $scope.register = function() {
+        var data = {email: $scope.email, password: $scope.password};
+        var config = {};
+
+        $http.post('/register', data, config).
+            success(function(data, status, headers, config) {
+                if(data.success) {
+                    console.log("register successful");
+                } else {
+                    console.log("register failed: " + data.toString());
+                }
+
+                $location.path("/login")
+            }).
+            error(function(data, status, headers, config) {
+                console.log("failed: " + data.errors);
+            });
+
+    }
+}
+RegisterController.$inject = ["$scope"];
 
 function DummyController($scope) {
 }

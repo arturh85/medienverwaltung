@@ -10,6 +10,15 @@
     app.get('/api/:collection', function (req, res, next) {
         console.log("GET /api/" + req.params.collection);
 
+        console.log(req.session);
+        if(!req.session.auth || !req.session.auth.loggedIn){
+            console.log("The user is NOT logged in");
+
+            res.send("not logged in", 401);
+            return ;
+
+        }
+
         var Model = db.model(req.params.collection);
         var qw = Model.find({});
 

@@ -12,7 +12,8 @@
     // include 3rd-party libraries
     var express = require('express'),
         mongoose = require('mongoose'),
-        everyauth = require('everyauth');
+        everyauth = require('everyauth'),
+        connect = require('connect');
 
     var program = require('commander');
 
@@ -23,20 +24,7 @@
         .option('-t, --test', 'run in test mode')
         .parse(process.argv);
 
-    // create server
-    //var app = module.exports.app = express.createServer();
-
-                 /*
-    // configure server
-    app.use(express.bodyParser());
-    app.use(express.methodOverride());
-    //app.use(app.router);
-    //app.use(everyauth.middleware());
-    app.use(express.static(path.join(application_root + "/../frontend", "app")));
-    app.use(express.errorHandler({ dumpExceptions:true, showStack:true }));
-    app.set('views', __dirname + '/views');
-    */
-    everyauth.debug = true;
+    //everyauth.debug = true;
 
     var usersById = {};
     var nextUserId = 0;
@@ -66,24 +54,20 @@
     everyauth
         .password
         .loginWith('email')
-        .getLoginPath('#!/login')
-        .postLoginPath('/login')
-//        .loginView('login.jade')
-// .loginLocals({
-// title: 'Login'
-// })
-// .loginLocals(function (req, res) {
-// return {
-// title: 'Login'
-// }
-// })
-        .loginLocals( function (req, res, done) {
-            setTimeout( function () {
-                done(null, {
-                    title: 'Async login'
-                });
-            }, 200);
+        .respondToLoginSucceed( function (res, user) {
+            console.log("respondToLoginSucceed")
+            if (user) { /* Then the login was successful */
+                console.log("sending login success!");
+                res.json({ success: true }, 200);
+            }
         })
+        .respondToLoginFail( function (req, res, errors, login) {
+            console.log("respondToLoginFail")
+            if (!errors || !errors.length) return;
+            return res.json({ success: false, errors: errors });
+        })
+        .getLoginPath("/login")
+        .postLoginPath('/login')
         .authenticate( function (login, password) {
             var errors = [];
 
@@ -107,7 +91,7 @@
             return user;
         })
 
-        .getRegisterPath('#!/register')
+        .getRegisterPath('/register')
         .postRegisterPath('/register')
         .registerView('register.jade')
 // .registerLocals({
@@ -142,7 +126,7 @@
         .loginSuccessRedirect('/')
         .registerSuccessRedirect('/');
 
-
+    /*
     var app = module.exports.app = express.createServer(
         express.bodyParser()
         , express.static(__dirname + "/../frontend/app")
@@ -150,7 +134,41 @@
         , express.cookieParser()
         , express.session({ secret: 'htuayreve'})
         , everyauth.middleware()
-    );
+    );*/
+
+    // create server
+    var app = module.exports.app = express.createServer();
+
+
+     // configure server
+     app.use(express.bodyParser());
+     app.use(express.methodOverride());
+     //app.use(app.router);
+     //app.use(everyauth.middleware());
+     app.use(express.static(path.join(application_root + "/../frontend", "app")));
+     app.use(express.errorHandler({ dumpExceptions:true, showStack:true }));
+     app.set('views', __dirname + '/views');
+
+    app.configure(function(){
+        app.set('views', __dirname + '/views');
+        app.set('view engine', 'jade');
+        app.use(express.cookieParser());
+        app.use(express.session({ secret: 'aj34jjSU4Z9!d$' }));
+        app.use(express.bodyParser());
+        app.use(everyauth.middleware());
+        app.use(express.methodOverride());
+        app.use(app.router);
+        app.use(express.static(path.join(application_root + "/../frontend", "app")));
+        everyauth.helpExpress(app);
+    });
+
+    app.configure('development', function(){
+        app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+    });
+
+    app.configure('production', function(){
+        app.use(express.errorHandler());
+    });
 
     // load configuration
     try {
@@ -234,13 +252,25 @@
         console.log("connected to mongodb: " + mongoUrl);
     });
 
-    everyauth.helpExpress(app);
-
     // load models
     cfg.loader.models.forEach(loader);
 
     // load controllers
     cfg.loader.controllers.forEach(loader);
+
+
+    app.get('/private', function(req, res){
+        /*console.log(req.session);*/
+        if(req.session.auth && req.session.auth.loggedIn){
+            res.render('private', {title: 'Protected'});
+        }else{
+            console.log("The user is NOT logged in");
+            /*console.log(req.session);*/
+            res.redirect('/');
+        }
+    });
+
+
 
     var serverAddress = cfg.server.production.addr;
     var serverPort = cfg.server.production.port;

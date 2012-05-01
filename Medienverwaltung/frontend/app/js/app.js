@@ -11,9 +11,10 @@
     ]).
       config(['$routeProvider', function($routeProvider) {
         $routeProvider.when('/login', {template: 'partials/login.html', controller: LoginController});
+        $routeProvider.when('/register', {template: 'partials/register.html', controller: RegisterController});
         $routeProvider.when('/media/edit/:id', {template: 'partials/media/form.html', controller: MediaEditController});
         $routeProvider.when('/media/:type', {template: 'partials/media/browse.html', controller: MediaListController});
         $routeProvider.when('/media', {template: 'partials/media/browse.html', controller: MediaListController});
-        $routeProvider.otherwise({redirectTo: '/media'});
+        $routeProvider.otherwise({redirectTo: '/login'});
       }]);
 }());
