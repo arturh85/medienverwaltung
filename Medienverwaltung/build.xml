@@ -3,7 +3,7 @@
 
     <taskdef name="jslint"
              classname="com.googlecode.jslint4java.ant.JSLintTask"
-             classpath="libs/jslint4java-2.0.2.jar" />
+             classpath="frontend/libs/jslint4java-2.0.2.jar" />
 
     <property name="reports.dir" value="reports" />
 
