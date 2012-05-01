@@ -27,7 +27,6 @@
 
       it('should fill the scope with methods', function() {
         expect($scope.addByISBN).toBeDefined();
-        expect($scope.deleteMedia).toBeDefined();
         expect($scope.reload).toBeDefined();
         expect($scope.loading).toBeDefined();
         expect($scope.params).toBeDefined();
