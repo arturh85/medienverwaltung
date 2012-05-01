@@ -16,3 +16,5 @@ java -jar "$BASE_DIR/../test/lib/jstestdriver/JsTestDriver.jar" \
      --testOutput "js-test-reports" \
      --tests all
 
+RESULT=$?
+exit $RESULT
