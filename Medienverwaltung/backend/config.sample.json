@@ -1,0 +1,48 @@
+{
+    "debug": true,
+    "logger": true,
+
+    "loader": {
+        "controllers": ["./controllers"],
+        "models": ["./models"]
+    },
+
+    "mongo": {
+        "production": {
+            "host": "localhost",
+            "port": 27017,
+            "name": "medienverwaltung"
+        },
+        "development": {
+            "host": "localhost",
+            "port": 27017,
+            "name": "medienverwaltung"
+        },
+        "test": {
+            "host": "localhost",
+            "port": 27017,
+            "name": "medienverwaltung_test"
+        }
+    },
+
+    "server": {
+        "production": {
+            "addr": "localhost",
+            "port": 3000
+        },
+        "development": {
+            "addr": "localhost",
+            "port": 3000
+        },
+        "test": {
+            "addr": "localhost",
+            "port": 3333
+        }
+    },
+
+    "amazon": {
+        "accessKeyId": "",
+        "secretAccessKey": "",
+        "associateTag": ""
+    }
+}

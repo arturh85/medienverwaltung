@@ -1,0 +1,13 @@
+{
+    "name": "medienverwaltung",
+    "version": "0.0.1",
+    "private": true,
+    "dependencies": {
+        "express": "2.5.8",
+        "aws-lib": "0.0.6",
+        "commander": "0.6.0",
+        "everyauth": "0.2.32",
+        "mongoose": "2.6.0"
+    }
+}
+

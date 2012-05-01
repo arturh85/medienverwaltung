@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Medienverwaltung" default="help">
+
+    <taskdef name="jslint"
+             classname="com.googlecode.jslint4java.ant.JSLintTask"
+             classpath="libs/jslint4java-2.0.2.jar" />
+
+    <property name="reports.dir" value="reports" />
+
+    <target name="clean" description="Removes output files created by other targets.">
+        <delete dir="${reports.dir}" failonerror="true" />
+    </target>
+
+    <target name="run-jslint" depends="clean">
+        <mkdir dir="reports" />
+        <jslint options="es5,white,node,sloppy,undef,plusplus,newcap,vars,nomen,indent=4">
+            <predef>jQuery, setTimeout, history, window, document, angular, console, __dirname, require, module, browser, element, describe, beforeEach, it, expect, inject</predef>
+            <formatter type="junit" destfile="${reports.dir}" />
+
+            <fileset dir="${basedir}">
+                <include name="**/*.js" />
+                <exclude name="**/*.min.js" />
+                <exclude name="backend/node_modules/**/*.js" />
+                <exclude name="backend/public/**/*.js" />
+                <exclude name="app/lib/angular/*.js" />
+                <exclude name="test/lib/**/*.js" />
+                <exclude name="app/js/jcrop/js/*.js" />
+            </fileset>
+        </jslint>
+    </target>
+
+    <target name="help">
+        <echo>PROJECTNAME Ant Tools. Available targets:</echo>
+        <echo>   help:          Displays this help.</echo>
+        <echo>   clean:         Removes output files created by other targets.</echo>
+        <echo>   run-jslint:    runs the js-lint tests</echo>
+    </target>
+</project>
+
+
