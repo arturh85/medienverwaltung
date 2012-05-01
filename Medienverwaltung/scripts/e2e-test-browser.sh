@@ -8,7 +8,7 @@ fi
 
 BASE_DIR=`dirname $0`
 
-java -jar "$BASE_DIR/../test/lib/jstestdriver/JsTestDriver.jar" \
+java -jar "$BASE_DIR/../frontend/test/lib/jstestdriver/JsTestDriver.jar" \
      --port 9876 \
      --browser $ICEWEASEL \
      --config "$BASE_DIR/../jsTestDriver-scenario.conf" \

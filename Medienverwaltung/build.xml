@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Medienverwaltung" default="help">
 
-    <taskdef name="jslint"
-             classname="com.googlecode.jslint4java.ant.JSLintTask"
-             classpath="frontend/libs/jslint4java-2.0.2.jar" />
 
     <property name="reports.dir" value="reports" />
+    <property name="jars.dir" value="libs" />
+    <property name="browser" value="/usr/bin/iceweasel" />
+
+    <taskdef name="jslint"
+             classname="com.googlecode.jslint4java.ant.JSLintTask"
+             classpath="${jars.dir}/jslint4java-2.0.2.jar" />
 
     <target name="clean" description="Removes output files created by other targets.">
         <delete dir="${reports.dir}" failonerror="true" />
     </target>
 
     <target name="run-jslint" depends="clean">
-        <mkdir dir="reports" />
+        <mkdir dir="${reports.dir}" />
         <jslint options="es5,white,node,sloppy,undef,plusplus,newcap,vars,nomen,indent=4">
             <predef>jQuery, setTimeout, history, window, document, angular, console, __dirname, require, module, browser, element, describe, beforeEach, it, expect, inject</predef>
             <formatter type="junit" destfile="${reports.dir}" />
@@ -31,9 +34,46 @@
 
     <target name="help">
         <echo>PROJECTNAME Ant Tools. Available targets:</echo>
-        <echo>   help:          Displays this help.</echo>
-        <echo>   clean:         Removes output files created by other targets.</echo>
-        <echo>   run-jslint:    runs the js-lint tests</echo>
+        <echo>   help:             Displays this help.</echo>
+        <echo>   clean:            Removes output files created by other targets.</echo>
+        <echo>   run-jslint:       runs the js-lint tests</echo>
+        <echo>   run-jstestdriver: runs the js unit tests</echo>
+        <echo>   run-tests:        runs all tests</echo>
+    </target>
+
+    <target name="run-tests" description="runs all tests">
+        <antcall target="run-jslint" />
+        <antcall target="run-jstestdriver" />
+    </target>
+
+    <target name="run-jstestdriver" description="Runs the js unit tests">
+        <mkdir dir="${reports.dir}" />
+        <mkdir dir="${reports.dir}/jstestdriver" />
+
+        <java jar="${jars.dir}/JsTestDriver.jar"
+              resultproperty="unitTestsPassed"
+              dir="${jars.dir}" fork="true">
+
+            <arg value="--config" />
+            <arg value="jsTestDriver.conf" />
+
+            <arg value="--tests" />
+            <arg value="all" />
+
+            <arg value="--port" />
+            <arg value="9876" />
+
+            <arg value="--browser" />
+            <arg value="${browser}" />
+
+            <arg value="--testOutput" />
+            <arg value="${reports.dir}/jstestdriver" />
+        </java>
+
+        <junitreport todir="${reports.dir}/jstestdriver">
+            <fileset dir="${reports.dir}/jstestdriver" includes="TEST-*.xml" />
+            <report todir="${reports.dir}/jstestdriver" />
+        </junitreport>
     </target>
 </project>
 

@@ -32,13 +32,6 @@ Setting up development environment:
 * (optionally) run 'npm install -g supervisor' and use 'supervisor app.js' to reload changes automatically
 * open http://localhost:3000 in browser
 
-Running tests:
---------------
-
-* run 'npm install -g jshint'
-
-
-
 Credits
 -------
 
