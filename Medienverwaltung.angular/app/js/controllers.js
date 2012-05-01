@@ -1,7 +1,3 @@
-(function () {
-    "use strict";
-
-
 function MediaListController($scope, $route, MediaCollection, $http) {
     $scope.params = $route.current.params;
 
@@ -109,4 +105,3 @@ LoginController.$inject = ["$scope"];
 function DummyController($scope) {
 }
 DummyController.$inject = ["$scope"];
-}());

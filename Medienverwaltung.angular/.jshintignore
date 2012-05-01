@@ -1,6 +1,1 @@
-node_modules
-packages
-.git
-app/lib/angular
-app/js/jcrop
-**/*.min.js
+backend/node_modules/**/*.js
