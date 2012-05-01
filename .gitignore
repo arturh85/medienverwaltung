@@ -1,11 +1,8 @@
 atlassian-ide-plugin.xml
 node_modules
-*.db
 *.gz
 *.swp
-*.pyc
 .idea
-/*.conf
 *.bak
 *.log
 *.egg
@@ -13,7 +10,7 @@ node_modules
 *.env
 *.ini
 *.orig
-*,cover
+*.cover
 *.iml
 /.idea
 */local/*

@@ -29,7 +29,7 @@
     app.use(express.bodyParser());
     app.use(express.methodOverride());
     app.use(app.router);
-    app.use(express.static(path.join(application_root + "/../", "app")));
+    app.use(express.static(path.join(application_root + "/../frontend", "app")));
     app.use(express.errorHandler({ dumpExceptions:true, showStack:true }));
     app.set('views', __dirname + '/views');
 
@@ -94,7 +94,6 @@
     var mongoPort = cfg.mongo.production.port;
     var mongoName = cfg.mongo.production.name;
 
-
     if(program.development) {
         mongoHost = cfg.mongo.development.host;
         mongoPort = cfg.mongo.development.port;
@@ -141,6 +140,5 @@
     // start server
     app.listen(serverPort, serverAddress);
 
-    console.log("server started on http://" + serverAddress + ":" + serverPort);
-
+    console.log("server started in " + mode + " mode on http://" + serverAddress + ":" + serverPort);
 }());

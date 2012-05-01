@@ -19,12 +19,12 @@
 
             <fileset dir="${basedir}">
                 <include name="**/*.js" />
+
                 <exclude name="**/*.min.js" />
                 <exclude name="backend/node_modules/**/*.js" />
-                <exclude name="backend/public/**/*.js" />
-                <exclude name="app/lib/angular/*.js" />
-                <exclude name="test/lib/**/*.js" />
-                <exclude name="app/js/jcrop/js/*.js" />
+                <exclude name="frontend/app/lib/angular/*.js" />
+                <exclude name="frontend/test/lib/**/*.js" />
+                <exclude name="frontend/app/js/jcrop/js/*.js" />
             </fileset>
         </jslint>
     </target>
