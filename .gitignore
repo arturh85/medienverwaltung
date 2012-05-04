@@ -13,6 +13,7 @@ node_modules
 *.cover
 *.iml
 /.idea
+/out
 */local/*
 */dist/*
 */htmlcov/*
