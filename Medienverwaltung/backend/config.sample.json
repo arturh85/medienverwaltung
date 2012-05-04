@@ -1,7 +1,4 @@
 {
-    "debug": true,
-    "logger": true,
-
     "loader": {
         "controllers": ["./controllers"],
         "models": ["./models"]
