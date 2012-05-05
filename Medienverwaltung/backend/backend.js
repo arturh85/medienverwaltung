@@ -16,8 +16,83 @@
         everyauth = require('everyauth'),
         connect = require('connect');
 
+
+    var serverAddress, serverPort, mode;
+    var mongoHost, mongoPort, mongoName;
+
+    // create server
+    var app = module.exports.app = express.createServer();
+
+    // load configuration
+    try {
+        cfg = module.exports.cfg = JSON.parse(fs.readFileSync(__dirname + '/config.json').toString());
+    } catch (e) {
+        throw new Error("File config.json not found. Try: 'cp config.sample.json config.json'");
+    }
+
+    app.configure('development', function () {
+        app.use(express.errorHandler({ dumpExceptions:true, showStack:true }));
+        app.use(express.logger());
+        //everyauth.debug = true;
+
+        serverAddress = cfg.server.development.addr;
+        serverPort = cfg.server.development.port;
+        mode = "development";
+
+        mongoHost = cfg.mongo.development.host;
+        mongoPort = cfg.mongo.development.port;
+        mongoName = cfg.mongo.development.name;
+
+        app.set('baseUrl', cfg.server.development.url);
+    });
+
+    app.configure('test', function () {
+        serverAddress = cfg.server.test.addr;
+        serverPort = cfg.server.test.port;
+        mode = "test";
+
+        mongoHost = cfg.mongo.test.host;
+        mongoPort = cfg.mongo.test.port;
+        mongoName = cfg.mongo.test.name;
+
+        app.set('baseUrl', cfg.server.test.url);
+    });
+
+    app.configure('production', function () {
+        // enable logger
+        app.use(express.logger());
+        serverAddress = cfg.server.production.addr;
+        serverPort = cfg.server.production.port;
+        mode = "production";
+
+        mongoHost = cfg.mongo.production.host;
+        mongoPort = cfg.mongo.production.port;
+        mongoName = cfg.mongo.production.name;
+
+        app.set('baseUrl', cfg.server.production.url);
+    });
+
+    everyauth;
+
+    var mongoUrl = 'mongodb://' + mongoHost + ':' + mongoPort + '/' + mongoName;
+
+    // open db connection
+    var db = module.exports.db = mongoose.connect(mongoUrl, function (err) {
+        if (err) {
+            throw err;
+        }
+
+        console.log("connected to mongodb: " + mongoUrl);
+    });
+
     everyauth.openid
-        .myHostname("http://localhost:3000")
+        .myHostname(app.set('baseUrl'))
+        .sendToAuthenticationUri(function(req,res) {
+            this.relyingParty.authenticate(req.query[this.openidURLField()], false, function(err,authenticationUrl){
+                if(err) return p.fail(err);
+                res.redirect(authenticationUrl);
+            });
+        })
         .simpleRegistration({
             "nickname" : true
             , "email"    : true
@@ -32,6 +107,7 @@
         .attributeExchange({
             "http://axschema.org/contact/email"       : "required"
         })
+
         .openidURLField('openid_identifier') //The POST variable used to get the OpenID
         .findOrCreateUser( function(session, openIdUserAttributes) {
             var Model = db.model('user');
@@ -61,10 +137,6 @@
         .redirectPath('/');
 
 
-    // create server
-    var app = module.exports.app = express.createServer();
-
-
     app.configure(function(){
         app.use(express.static(application_root + "/../frontend/app"));
         app.set('views', __dirname + '/views');
@@ -77,13 +149,6 @@
         app.use(app.router);
         everyauth.helpExpress(app);
     });
-
-    // load configuration
-    try {
-        cfg = module.exports.cfg = JSON.parse(fs.readFileSync(__dirname + '/config.json').toString());
-    } catch (e) {
-        throw new Error("File config.json not found. Try: 'cp config.sample.json config.json'");
-    }
 
     // file loader (for controllers, models, ...)
     var loader = function (dir) {
@@ -180,63 +245,6 @@
      }
      });
      */
-
-    var serverAddress, serverPort, mode;
-    var mongoHost, mongoPort, mongoName;
-
-    app.configure('development', function () {
-        app.use(express.errorHandler({ dumpExceptions:true, showStack:true }));
-        app.use(express.logger());
-        //everyauth.debug = true;
-
-        serverAddress = cfg.server.development.addr;
-        serverPort = cfg.server.development.port;
-        mode = "development";
-
-        mongoHost = cfg.mongo.development.host;
-        mongoPort = cfg.mongo.development.port;
-        mongoName = cfg.mongo.development.name;
-
-        app.set('baseUrl', cfg.server.development.url);
-    });
-
-    app.configure('test', function () {
-        serverAddress = cfg.server.test.addr;
-        serverPort = cfg.server.test.port;
-        mode = "test";
-
-        mongoHost = cfg.mongo.test.host;
-        mongoPort = cfg.mongo.test.port;
-        mongoName = cfg.mongo.test.name;
-
-        app.set('baseUrl', cfg.server.test.url);
-    });
-
-    app.configure('production', function () {
-        // enable logger
-        app.use(express.logger());
-        serverAddress = cfg.server.production.addr;
-        serverPort = cfg.server.production.port;
-        mode = "production";
-
-        mongoHost = cfg.mongo.production.host;
-        mongoPort = cfg.mongo.production.port;
-        mongoName = cfg.mongo.production.name;
-
-        app.set('baseUrl', cfg.server.production.url);
-    });
-
-    var mongoUrl = 'mongodb://' + mongoHost + ':' + mongoPort + '/' + mongoName;
-
-    // open db connection
-    var db = module.exports.db = mongoose.connect(mongoUrl, function (err) {
-        if (err) {
-            throw err;
-        }
-
-        console.log("connected to mongodb: " + mongoUrl);
-    });
-
     // load models
     cfg.loader.models.forEach(loader);
 
