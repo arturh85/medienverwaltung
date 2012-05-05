@@ -1,6 +1,7 @@
+
+
 function MediaListController($scope, $route, MediaCollection, $http) {
     $scope.params = $route.current.params;
-
     $scope.loading = false;
     $scope.amazonResults = [];
 
@@ -53,7 +54,7 @@ function MediaListController($scope, $route, MediaCollection, $http) {
 
     $scope.reload();
 }
-MediaListController.$inject = ["$scope", "$route", "MediaCollection", "$http"];
+MediaListController.$inject = ["$scope", "$route", "MediaCollection", "$http", "$rootScope"];
 
 function MediaEditController($scope, $route, MediaCollection, $http, $location) {
     var self = this;
@@ -122,32 +123,62 @@ function LoginController($scope, $http, $location) {
 }
 LoginController.$inject = ["$scope", "$http", "$location"];
 
-function RegisterController($scope) {
-    $scope.email = "";
-    $scope.password = "";
+function ProfileController($scope, $route, UserCollection, $location) {
+    $scope.params = $route.current.params;
+    $scope.user = undefined;
 
-    $scope.register = function() {
-        var data = {email: $scope.email, password: $scope.password};
-        var config = {};
+    var query = {};
+    var id = $scope.params.id;
 
-        $http.post('/register', data, config).
-            success(function(data, status, headers, config) {
-                if(data.success) {
-                    console.log("register successful");
-                } else {
-                    console.log("register failed: " + data.toString());
-                }
-
-                $location.path("/login")
-            }).
-            error(function(data, status, headers, config) {
-                console.log("failed: " + data.errors);
-            });
-
+    if(id == undefined) {
+        console.log("tried to view your profile page without beeing logged in");
+        $location.path("/login");
+        return ;
     }
+
+    if(id == 'me') {
+        if($scope.auth == undefined) {
+
+        }
+
+        id = $scope.auth._id;
+    }
+
+    UserCollection.get({id: id}, function(user) {
+        $scope.original = angular.copy(user);
+        $scope.user = user;
+        $scope.loading = false;
+        console.log("loaded user for profile: " + JSON.stringify(user));
+    });
+
+    $scope.isClean = function() {
+        return angular.equals($scope.original, $scope.user);
+    };
+
+    $scope.update = function() {
+        $scope.user.update(function() {
+            $scope.original = angular.copy(user);
+        });
+    };
 }
-RegisterController.$inject = ["$scope"];
+ProfileController.$inject = ["$scope", "$route", "UserCollection", "$location"];
 
 function DummyController($scope) {
 }
 DummyController.$inject = ["$scope"];
+
+function AuthController($rootScope, $http) {
+    console.log("authcontroller!");
+
+    $rootScope.auth = undefined;
+    $http({method: 'GET', url: '/user/me'}).
+        success(function(data, status, headers, config) {
+            $rootScope.auth = data;
+            console.log("successfully authenticated");
+        }).
+        error(function(data, status, headers, config) {
+            $rootScope.auth === false;
+            console.log("failed with status " + status + ": " + data);
+        });
+}
+AuthController.$inject = ["$rootScope", "$http"];

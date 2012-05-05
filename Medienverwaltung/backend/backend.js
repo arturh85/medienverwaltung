@@ -2,6 +2,7 @@
 (function () {
     "use strict";
 
+    // include node.js
     var application_root = __dirname,
         fs = require('fs'),
         sys = require('util'),
@@ -12,39 +13,76 @@
     // include 3rd-party libraries
     var express = require('express'),
         mongoose = require('mongoose'),
-        mongooseAuth = require('mongoose-auth'),
         everyauth = require('everyauth'),
         connect = require('connect');
 
-    /*
-    everyauth.everymodule
-        .findUserById( function (id, callback) {
-        callback(null, usersById[id]);
-    });
-    */
+    everyauth.openid
+        .myHostname("http://localhost:3000")
+        .simpleRegistration({
+            "nickname" : true
+            , "email"    : true
+            , "fullname" : true
+            , "dob"      : true
+            , "gender"   : true
+            , "postcode" : true
+            , "country"  : true
+            , "language" : true
+            , "timezone" : true
+        })
+        .attributeExchange({
+            "http://axschema.org/contact/email"       : "required"
+        })
+        .openidURLField('openid_identifier') //The POST variable used to get the OpenID
+        .findOrCreateUser( function(session, openIdUserAttributes) {
+            var Model = db.model('user');
+            var qw = Model.findOne({claimedIdentifier: openIdUserAttributes.claimedIdentifier}, function(err, doc) {
+                if(err) {
+                    throw err;
+                }
+
+                if(!doc){
+                    doc = new Model(openIdUserAttributes);
+
+                    doc.save(function (err) {
+                        if(err) {
+                            throw err;
+                        }
+
+                        return doc;
+                    });
+                }
+
+                console.log("authenticated: " + JSON.stringify(doc));
+                return doc;
+            });
+
+            return qw;
+        })
+        .redirectPath('/');
+
 
     // create server
     var app = module.exports.app = express.createServer();
+
 
     app.configure(function(){
         app.use(express.static(application_root + "/../frontend/app"));
         app.set('views', __dirname + '/views');
         app.set('view engine', 'jade');
-        app.use(express.session({ secret: 'aj34jjSU4Z9!d$' }));
-        app.use(express.cookieParser());
         app.use(express.bodyParser());
-        app.use(mongooseAuth.middleware());
+        app.use(express.cookieParser());
+        app.use(express.session({ secret: 'aj34jjSU4Z9!d$' }));
         app.use(express.methodOverride());
+        app.use(everyauth.middleware());
         app.use(app.router);
+        everyauth.helpExpress(app);
     });
-
-    mongooseAuth.helpExpress(app);
 
     // load configuration
     try {
         cfg = module.exports.cfg = JSON.parse(fs.readFileSync(__dirname + '/config.json').toString());
     } catch (e) {
-        throw new Error("File config.json not found. Try: 'cp config.json.sample config.json'");
+        throw new Error("File config.json not found. Try: 'cp config.sample.json config.json'");
     }
 
     // file loader (for controllers, models, ...)
@@ -78,6 +116,40 @@
     };
 
     sys.inherits(NotFound, Error);
+
+    var NotLoggedIn = module.exports.nf = function (msg) {
+        this.name = 'NotLoggedIn';
+        Error.call(this, msg);
+        //Error.captureStackTrace(this, arguments.callee);
+    };
+
+    sys.inherits(NotLoggedIn, Error);
+
+    var NotAllowed = module.exports.nf = function (msg) {
+        this.name = 'NotAllowed';
+        Error.call(this, msg);
+        //Error.captureStackTrace(this, arguments.callee);
+    };
+
+    sys.inherits(NotAllowed, Error);
+
+    // Error 401
+    app.error(function (err, req, res, next) {
+        if (err instanceof NotLoggedIn) {
+            res.send('401 Unauthorized', 404);
+        } else {
+            next(err);
+        }
+    });
+
+    // Error 403
+    app.error(function (err, req, res, next) {
+        if (err instanceof NotAllowed) {
+            res.send('401 Unauthorized', 404);
+        } else {
+            next(err);
+        }
+    });
 
     // Error 404
     app.error(function (err, req, res, next) {
@@ -115,7 +187,7 @@
     app.configure('development', function () {
         app.use(express.errorHandler({ dumpExceptions:true, showStack:true }));
         app.use(express.logger());
-        everyauth.debug = true;
+        //everyauth.debug = true;
 
         serverAddress = cfg.server.development.addr;
         serverPort = cfg.server.development.port;
@@ -124,6 +196,8 @@
         mongoHost = cfg.mongo.development.host;
         mongoPort = cfg.mongo.development.port;
         mongoName = cfg.mongo.development.name;
+
+        app.set('baseUrl', cfg.server.development.url);
     });
 
     app.configure('test', function () {
@@ -134,6 +208,8 @@
         mongoHost = cfg.mongo.test.host;
         mongoPort = cfg.mongo.test.port;
         mongoName = cfg.mongo.test.name;
+
+        app.set('baseUrl', cfg.server.test.url);
     });
 
     app.configure('production', function () {
@@ -146,6 +222,8 @@
         mongoHost = cfg.mongo.production.host;
         mongoPort = cfg.mongo.production.port;
         mongoName = cfg.mongo.production.name;
+
+        app.set('baseUrl', cfg.server.production.url);
     });
 
     var mongoUrl = 'mongodb://' + mongoHost + ':' + mongoPort + '/' + mongoName;
@@ -164,6 +242,7 @@
 
     // load controllers
     cfg.loader.controllers.forEach(loader);
+
 
     // start server
     app.listen(serverPort, serverAddress);

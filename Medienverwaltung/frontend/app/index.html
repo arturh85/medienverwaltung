@@ -79,17 +79,19 @@
 
       <div id="right" ng-view></div>
       <div id="left">
-          <!--${self.side()}-->
-          <div>Medienverwaltung v<span app-version></span></div>
-          <div class="box">
-              <h2>Todo:</h2>
-              <ul>
-                  <li><a href="#/media">Add Media</a></li>
-                  <li><a href="#/media/withoutImage">Media without Image</a></li>
-              </ul>
+          <div class="box" ng-controller="AuthController">
+              <div ng-show="auth">
+                Logged in as <a href="#/profile/me">{{ auth.nickname }}</a><br/>
+                <a href="/logout">Logout</a>
+              </div>
+
+              <div ng-show="!auth">
+                  <a href="#/login">Login with OpenID</a>
+              </div>
           </div>
           <div class="box">
               <h2>Search:</h2>
+
               <form id="signin-form" method="post" action="">
                   <table border="0" cellspacing="0" cellpadding="0">
                       <tr><td>
@@ -99,6 +101,14 @@
                       </td></tr></table>
               </form>
           </div>
+          <div class="box">
+              <h2>Todo:</h2>
+              <ul>
+                  <li><a href="#/media">Add Media</a></li>
+                  <li><a href="#/media/withoutImage">Media without Image</a></li>
+              </ul>
+          </div>
+          <div class="box">Medienverwaltung v<span app-version></span></div>
       </div>
   </div>
 </body>

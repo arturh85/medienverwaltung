@@ -10,7 +10,6 @@
     app.get('/api/:collection', function (req, res, next) {
         console.log("GET /api/" + req.params.collection);
 
-        console.log(req.session);
         if(!req.session.auth || !req.session.auth.loggedIn){
             console.log("The user is NOT logged in");
 

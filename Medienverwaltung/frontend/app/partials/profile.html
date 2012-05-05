@@ -1,0 +1,15 @@
+<form name="myForm" ng-show="user">
+    <div class="control-group" ng-class="{error: myForm.user.$invalid}">
+        <label>E-Mail</label>
+        <input type="text" name="email" ng-model="email" required>
+
+        <span ng-show="myForm.user.$error.required" class="help-inline">
+            Required
+        </span>
+    </div>
+
+    <br>
+    <a href="#/" class="btn">Cancel</a>
+    <button ng-click="updateProfile()" ng-disabled="isClean() || myForm.$invalid"
+            class="btn btn-primary">Save</button>
+</form>
