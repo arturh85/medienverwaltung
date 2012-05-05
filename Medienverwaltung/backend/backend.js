@@ -130,25 +130,43 @@
             "postcode": true, "country": true, "language": true, "timezone" : true
         })
         .attributeExchange({
-            "http://axschema.org/contact/email"       : "required"
+            "http://axschema.org/contact/email": "required"
         })
         .findOrCreateUser( function(session, openIdUserAttributes) {
             var Model = db.model('user');
-            var qw = Model.findOne({claimedIdentifier: openIdUserAttributes.claimedIdentifier}, function(err, doc) {
-                if(err) throw err;
-                if(!doc){
-                    doc = new Model(openIdUserAttributes);
-                    doc.save(function (err) {
-                        if(err) throw err;
-                        return doc;
+
+            var userPromise = this.Promise();
+
+            var result = Model.findOne({claimedIdentifier: openIdUserAttributes.claimedIdentifier}, function(err, user) {
+                if (err) return userPromise.fail(err);
+                if (user) {
+                    console.log("authenticated: " + JSON.stringify(user));
+                    return userPromise.fulfill(user);
+                }
+
+                if(!user){
+                    user = new Model(openIdUserAttributes);
+                    user.save(function (err) {
+                        if(err) return userPromise.fail(err);
+                        console.log("authenticated: " + JSON.stringify(user));
+                        return userPromise.fulfill(user);
                     });
                 }
-                console.log("authenticated: " + JSON.stringify(doc));
-                return doc;
+                return user;
             });
-            return qw;
+
+            return userPromise;
         })
         .redirectPath('/');
+
+    everyauth.everymodule
+        .findUserById( function (id, callback) {
+            var Model = db.model('user');
+            Model.findById(id, function (err, user) {
+                if (err) return callback(err);
+                callback(null, user);
+            });
+        });
 
     app.configure(function(){
         app.use(express.static(application_root + "/../frontend/app"));
@@ -218,7 +236,6 @@
      }
      });
      */
-
 
     // start server
     app.listen(serverPort, serverAddress);

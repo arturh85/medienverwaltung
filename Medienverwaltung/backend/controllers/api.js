@@ -4,6 +4,7 @@
     var app = module.parent.exports.app,
         db = module.parent.exports.db,
         NotFound = module.parent.exports.NotFound,
+        NotAllowed = module.parent.exports.NotAllowed,
         NotLoggedIn = module.parent.exports.NotLoggedIn;
 
     // FIND
@@ -14,6 +15,10 @@
 
         var Model = db.model(req.params.collection);
         var qw = Model.find({});
+
+        var userId = req.session.auth.userId;
+
+        qw.where('userId', userId);
 
         if (req.param('query')) {
             qw.where(req.param('query'));
@@ -42,7 +47,7 @@
 
             var ret = [];
             docs.forEach(function (doc) {
-                console.log(" - found: " + doc.toString());
+                //console.log(" - found: " + doc.toString());
                 ret.push(doc.toObject());
             });
 
@@ -65,11 +70,18 @@
                 throw err;
             }
 
+
+            var userId = req.session.auth.userId;
+
+            if(doc.userId != userId) {
+                return next(new NotAllowed());
+            }
+
             if (!doc) {
                 return next(new NotFound());
             }
 
-            console.log(" - found: " + doc.toString());
+            //console.log(" - found: " + doc.toString());
             res.header('Content-Type', 'application/json');
             res.send(doc.toObject(), 200);
         });
@@ -79,6 +91,9 @@
     var createDoc = function (req, res, next) {
         var Model = db.model(req.params.collection),
             doc = new Model(req.body);
+
+        var userId = req.session.auth.userId;
+        doc.userId = userId;
 
         doc.save(function (err) {
             if(err) {
@@ -101,8 +116,12 @@
                 throw err;
             }
 
-            if (!doc) {
-                return next(new NotFound());
+            if (!doc) return next(new NotFound());
+
+            // check authorisation
+            var userId = req.session.auth.userId;
+            if(doc.userId != userId) {
+                return next(new NotAllowed());
             }
 
             console.log(" - no results");
@@ -126,14 +145,18 @@
                 throw err;
             }
 
-            if (!doc) {
-                next(new NotFound());
-            } else {
-                doc.remove(function () {
-                    console.log("DELETED: " + doc.toString());
-                    res.send('200 OK', 200);
-                });
+            if (!doc) return next(new NotFound());
+
+            // check authorisation
+            var userId = req.session.auth.userId;
+            if(doc.userId != userId) {
+                return next(new NotAllowed());
             }
+
+            doc.remove(function () {
+                console.log("DELETED: " + doc.toString());
+                res.send('200 OK', 200);
+            });
         });
     });
 }());

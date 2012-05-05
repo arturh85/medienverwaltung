@@ -35,10 +35,7 @@
             }
 
             if(result.Items.Request.Errors) {
-                result.Items.Request.Errors.forEach(function(error) {
-                    console.log("ERROR: " + error.Message);
-                });
-
+                console.log("ItemLookup failed: " + JSON.stringify(result.Items.Request.Errors));
                 next(new NotFound());
             } else {
                 var ret = result.Items.Item;
