@@ -6,15 +6,13 @@
     var application_root = __dirname,
         fs = require('fs'),
         sys = require('util'),
-        path = require('path'),
-        extname = require('path').extname,
+        fileExtension = require('path').extname,
         cfg;
 
     // include 3rd-party libraries
     var express = require('express'),
         mongoose = require('mongoose'),
-        everyauth = module.exports.everyauth = require('everyauth'),
-        connect = require('connect');
+        everyauth = module.exports.everyauth = require('everyauth');
 
     var serverAddress,
         serverPort,
@@ -108,7 +106,7 @@
             }
 
             files.forEach(function (file) {
-                if (extname(file) === '.js') {
+                if (fileExtension(file) === '.js') {
                     require(dir + '/' + file.replace('.js', ''));
                 }
             });
@@ -120,6 +118,7 @@
 
     everyauth.openid
         .myHostname(app.set('baseUrl'))
+        .openidURLField('openid_identifier') //The POST variable used to get the OpenID
         .sendToAuthenticationUri(function(req,res) {
             this.relyingParty.authenticate(req.query[this.openidURLField()], false, function(err,authenticationUrl){
                 if(err) return p.fail(err);
@@ -127,40 +126,26 @@
             });
         })
         .simpleRegistration({
-            "nickname" : true
-            , "email"    : true
-            , "fullname" : true
-            , "dob"      : true
-            , "gender"   : true
-            , "postcode" : true
-            , "country"  : true
-            , "language" : true
-            , "timezone" : true
+            "nickname": true, "email": true, "fullname": true, "dob": true, "gender": true,
+            "postcode": true, "country": true, "language": true, "timezone" : true
         })
         .attributeExchange({
             "http://axschema.org/contact/email"       : "required"
         })
-
-        .openidURLField('openid_identifier') //The POST variable used to get the OpenID
         .findOrCreateUser( function(session, openIdUserAttributes) {
             var Model = db.model('user');
             var qw = Model.findOne({claimedIdentifier: openIdUserAttributes.claimedIdentifier}, function(err, doc) {
                 if(err) throw err;
-
                 if(!doc){
                     doc = new Model(openIdUserAttributes);
-
                     doc.save(function (err) {
                         if(err) throw err;
-
                         return doc;
                     });
                 }
-
                 console.log("authenticated: " + JSON.stringify(doc));
                 return doc;
             });
-
             return qw;
         })
         .redirectPath('/');

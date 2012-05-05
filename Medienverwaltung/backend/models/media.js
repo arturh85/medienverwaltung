@@ -4,7 +4,9 @@
     var mongoose = require("mongoose");
 
     var Media = new mongoose.Schema({
-        isbn: String
+        isbn: String,
+        type: String,
+        userId: String
     });
 
     mongoose.model('media', Media);

@@ -4,10 +4,9 @@
 
     var mongoose = require("mongoose");
 
-
     var User = new mongoose.Schema({
-        email: String,
-        password: String
+        claimedIdentifier: String,
+        email: String
     });
 
     mongoose.model('user', User);
