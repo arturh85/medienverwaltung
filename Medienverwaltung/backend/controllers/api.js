@@ -3,19 +3,13 @@
 
     var app = module.parent.exports.app,
         db = module.parent.exports.db,
-        cfg = module.parent.exports.cfg,
-        NotFound = module.parent.exports.nf;
+        NotFound = module.parent.exports.NotFound,
+        NotLoggedIn = module.parent.exports.NotLoggedIn;
 
     // FIND
     app.get('/api/:collection', function (req, res, next) {
-        console.log("GET /api/" + req.params.collection);
-
         if(!req.session.auth || !req.session.auth.loggedIn){
-            console.log("The user is NOT logged in");
-
-            res.send("not logged in", 401);
-            return ;
-
+            return next(new NotLoggedIn());
         }
 
         var Model = db.model(req.params.collection);
@@ -72,13 +66,12 @@
             }
 
             if (!doc) {
-                console.log(" - not found");
-                next(new NotFound());
-            } else {
-                console.log(" - found: " + doc.toString());
-                res.header('Content-Type', 'application/json');
-                res.send(doc.toObject(), 200);
+                return next(new NotFound());
             }
+
+            console.log(" - found: " + doc.toString());
+            res.header('Content-Type', 'application/json');
+            res.send(doc.toObject(), 200);
         });
     });
 
@@ -86,8 +79,6 @@
     var createDoc = function (req, res, next) {
         var Model = db.model(req.params.collection),
             doc = new Model(req.body);
-
-        console.log("PUT /api/" + req.params.collection + " -> " + doc.toString());
 
         doc.save(function (err) {
             if(err) {
@@ -103,7 +94,6 @@
 
     // MODIFY
     var modifyDoc = function (req, res, next) {
-        console.log("PUT /api/" + req.params.collection + "/" + req.params.id);
         var Model = db.model(req.params.collection);
 
         Model.findById(req.params.id, function (err, doc) {
@@ -112,16 +102,15 @@
             }
 
             if (!doc) {
-                console.log(" - not found");
-                next(new NotFound());
-            } else {
-                console.log(" - no results");
-                doc.merge(req.param(req.params.collection));
-
-                doc.save(function () {
-                    res.send(doc.toObject(), 200);
-                });
+                return next(new NotFound());
             }
+
+            console.log(" - no results");
+            doc.merge(req.param(req.params.collection));
+
+            doc.save(function () {
+                res.send(doc.toObject(), 200);
+            });
         });
     };
 
@@ -130,8 +119,6 @@
 
     // REMOVE
     app.del('/api/:collection/:id', function (req, res, next) {
-        console.log("DELETE /api/" + req.params.collection + "/" + req.params.id);
-
         var Model = db.model(req.params.collection);
 
         Model.findById(req.params.id, function (err, doc) {
@@ -140,12 +127,10 @@
             }
 
             if (!doc) {
-                console.log(" - not found");
                 next(new NotFound());
             } else {
-                console.log(" - found: " + doc.toString());
                 doc.remove(function () {
-                    console.log(" - removed");
+                    console.log("DELETED: " + doc.toString());
                     res.send('200 OK', 200);
                 });
             }

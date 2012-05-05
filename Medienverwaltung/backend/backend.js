@@ -13,12 +13,12 @@
     // include 3rd-party libraries
     var express = require('express'),
         mongoose = require('mongoose'),
-        everyauth = require('everyauth'),
+        everyauth = module.exports.everyauth = require('everyauth'),
         connect = require('connect');
 
-
-    var serverAddress, serverPort, mode;
-    var mongoHost, mongoPort, mongoName;
+    var serverAddress,
+        serverPort,
+        mode;
 
     // create server
     var app = module.exports.app = express.createServer();
@@ -39,11 +39,11 @@
         serverPort = cfg.server.development.port;
         mode = "development";
 
-        mongoHost = cfg.mongo.development.host;
-        mongoPort = cfg.mongo.development.port;
-        mongoName = cfg.mongo.development.name;
-
         app.set('baseUrl', cfg.server.development.url);
+
+        app.set('mongoUrl', 'mongodb://' + cfg.mongo.development.host + ':'
+                                        + cfg.mongo.development.port + '/'
+                                        + cfg.mongo.development.name);
     });
 
     app.configure('test', function () {
@@ -51,11 +51,11 @@
         serverPort = cfg.server.test.port;
         mode = "test";
 
-        mongoHost = cfg.mongo.test.host;
-        mongoPort = cfg.mongo.test.port;
-        mongoName = cfg.mongo.test.name;
-
         app.set('baseUrl', cfg.server.test.url);
+
+        app.set('mongoUrl', 'mongodb://' + cfg.mongo.test.host + ':'
+                                         + cfg.mongo.test.port + '/'
+                                         + cfg.mongo.test.name);
     });
 
     app.configure('production', function () {
@@ -65,25 +65,58 @@
         serverPort = cfg.server.production.port;
         mode = "production";
 
-        mongoHost = cfg.mongo.production.host;
-        mongoPort = cfg.mongo.production.port;
-        mongoName = cfg.mongo.production.name;
-
         app.set('baseUrl', cfg.server.production.url);
+
+        app.set('mongoUrl', 'mongodb://' + cfg.mongo.production.host + ':'
+                                         + cfg.mongo.production.port + '/'
+                                         + cfg.mongo.production.name);
     });
-
-    everyauth;
-
-    var mongoUrl = 'mongodb://' + mongoHost + ':' + mongoPort + '/' + mongoName;
 
     // open db connection
-    var db = module.exports.db = mongoose.connect(mongoUrl, function (err) {
-        if (err) {
-            throw err;
-        }
-
-        console.log("connected to mongodb: " + mongoUrl);
+    var db = module.exports.db = mongoose.connect(app.set('mongoUrl'), function (err) {
+        if (err) throw err;
+        console.log("connected to mongodb: " + app.set('mongoUrl'));
     });
+
+    // define shortcut exceptions for setting correct HTTP status codes
+    var NotFound = module.exports.NotFound = function (msg) {
+        this.name = 'NotFound';
+        Error.call(this, msg);
+        //Error.captureStackTrace(this, arguments.callee);
+    };
+    sys.inherits(NotFound, Error);
+
+    var NotLoggedIn = module.exports.NotLoggedIn = function (msg) {
+        this.name = 'NotLoggedIn';
+        Error.call(this, msg);
+        //Error.captureStackTrace(this, arguments.callee);
+    };
+    sys.inherits(NotLoggedIn, Error);
+
+    var NotAllowed = module.exports.NotAllowed = function (msg) {
+        this.name = 'NotAllowed';
+        Error.call(this, msg);
+        //Error.captureStackTrace(this, arguments.callee);
+    };
+    sys.inherits(NotAllowed, Error);
+
+    // file loader (for controllers, models, ...)
+    var loadJsDirectory = function (dir) {
+        fs.readdir(dir, function (err, files) {
+            if (err) {
+                throw err;
+            }
+
+            files.forEach(function (file) {
+                if (extname(file) === '.js') {
+                    require(dir + '/' + file.replace('.js', ''));
+                }
+            });
+        });
+    };
+
+    loadJsDirectory("./models");
+    loadJsDirectory("./controllers");
 
     everyauth.openid
         .myHostname(app.set('baseUrl'))
@@ -112,17 +145,13 @@
         .findOrCreateUser( function(session, openIdUserAttributes) {
             var Model = db.model('user');
             var qw = Model.findOne({claimedIdentifier: openIdUserAttributes.claimedIdentifier}, function(err, doc) {
-                if(err) {
-                    throw err;
-                }
+                if(err) throw err;
 
                 if(!doc){
                     doc = new Model(openIdUserAttributes);
 
                     doc.save(function (err) {
-                        if(err) {
-                            throw err;
-                        }
+                        if(err) throw err;
 
                         return doc;
                     });
@@ -135,7 +164,6 @@
             return qw;
         })
         .redirectPath('/');
-
 
     app.configure(function(){
         app.use(express.static(application_root + "/../frontend/app"));
@@ -150,58 +178,12 @@
         everyauth.helpExpress(app);
     });
 
-    // file loader (for controllers, models, ...)
-    var loader = function (dir) {
-        fs.readdir(dir, function (err, files) {
-            if (err) {
-                throw err;
-            }
-
-            files.forEach(function (file) {
-                if (extname(file) === '.js') {
-                    require(dir + '/' + file.replace('.js', ''));
-                }
-            });
-        });
-    };
-
-    // enable debugger
-    if (true === cfg.debug) {
-        app.use(express.errorHandler({
-            showStack:true,
-            dumpExceptions:true
-        }));
-    }
-
-
-    var NotFound = module.exports.nf = function (msg) {
-        this.name = 'NotFound';
-        Error.call(this, msg);
-        //Error.captureStackTrace(this, arguments.callee);
-    };
-
-    sys.inherits(NotFound, Error);
-
-    var NotLoggedIn = module.exports.nf = function (msg) {
-        this.name = 'NotLoggedIn';
-        Error.call(this, msg);
-        //Error.captureStackTrace(this, arguments.callee);
-    };
-
-    sys.inherits(NotLoggedIn, Error);
-
-    var NotAllowed = module.exports.nf = function (msg) {
-        this.name = 'NotAllowed';
-        Error.call(this, msg);
-        //Error.captureStackTrace(this, arguments.callee);
-    };
-
-    sys.inherits(NotAllowed, Error);
-
     // Error 401
     app.error(function (err, req, res, next) {
         if (err instanceof NotLoggedIn) {
-            res.send('401 Unauthorized', 404);
+            var msg = '401 Unauthorized';
+            //console.log(msg + ": " + JSON.stringify(req));
+            res.send(msg, 401);
         } else {
             next(err);
         }
@@ -210,7 +192,9 @@
     // Error 403
     app.error(function (err, req, res, next) {
         if (err instanceof NotAllowed) {
-            res.send('401 Unauthorized', 404);
+            var msg = '403 Forbidden';
+            //console.log(msg + ": " + JSON.stringify(req));
+            res.send(msg, 403);
         } else {
             next(err);
         }
@@ -219,7 +203,9 @@
     // Error 404
     app.error(function (err, req, res, next) {
         if (err instanceof NotFound) {
-            res.send('404 Not found', 404);
+            var msg = '404 Not found';
+            //console.log(msg + ": " + JSON.stringify(req));
+            res.send(msg, 404);
         } else {
             next(err);
         }
@@ -227,7 +213,9 @@
 
     // Error 500
     app.error(function (err, req, res) {
-        res.send('500 Internal server error', 500);
+        var msg = '500 Internal server error';
+        //console.log(msg + ": " + req.url);
+        res.send(msg, 500);
     });
 
     app.get('/logout', function (req, res) {
@@ -245,11 +233,6 @@
      }
      });
      */
-    // load models
-    cfg.loader.models.forEach(loader);
-
-    // load controllers
-    cfg.loader.controllers.forEach(loader);
 
 
     // start server

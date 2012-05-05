@@ -1,15 +1,48 @@
 <form name="myForm" ng-show="user">
-    <div class="control-group" ng-class="{error: myForm.user.$invalid}">
-        <label>E-Mail</label>
-        <input type="text" name="email" ng-model="email" required>
+    <div class="control-group">
+        <label>OpenID URL</label>
 
-        <span ng-show="myForm.user.$error.required" class="help-inline">
-            Required
-        </span>
+        <span>{{user.claimedIdentifier}}</span>
+    </div>
+    <div class="control-group">
+        <label>Nickname</label>
+        <input type="text" name="nickname" ng-model="user.nickname" required>
     </div>
 
-    <br>
-    <a href="#/" class="btn">Cancel</a>
-    <button ng-click="updateProfile()" ng-disabled="isClean() || myForm.$invalid"
-            class="btn btn-primary">Save</button>
+    <div class="control-group">
+        <label>E-Mail</label>
+        <input type="text" name="email" ng-model="user.email" required>
+    </div>
+
+    <div class="control-group" ng-show="user.fullname">
+        <label>Name</label>
+        <input type="text" name="fullname" ng-model="user.fullname" required>
+    </div>
+
+    <div class="control-group" ng-show="user.gender">
+        <label>Gender</label>
+        <input type="text" name="gender" ng-model="user.gender" required>
+    </div>
+
+    <div class="control-group" ng-show="user.country">
+        <label>Country</label>
+        <input type="text" name="country" ng-model="user.country" required>
+    </div>
+
+    <div class="control-group" ng-show="user.language">
+        <label>Language</label>
+        <input type="text" name="language" ng-model="user.language" required>
+    </div>
+
+    <div class="control-group" ng-show="user.timezone">
+        <label>Timezone</label>
+        <input type="text" name="timezone" ng-model="user.timezone" required>
+    </div>
+
+    <div ng-show="user._id == auth._id">
+        <br>
+        <a href="#/" class="btn">Cancel</a>
+        <button ng-click="update()" ng-disabled="isClean() || myForm.$invalid"
+                class="btn btn-primary">Save</button>
+    </div>
 </form>

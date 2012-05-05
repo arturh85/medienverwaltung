@@ -4,7 +4,7 @@
     var app = module.parent.exports.app,
         db = module.parent.exports.db,
         cfg = module.parent.exports.cfg,
-        NotFound = module.parent.exports.nf;
+        NotFound = module.parent.exports.NotFound;
 
     var aws = require("aws-lib");
     var prodAdv = aws.createProdAdvClient(cfg.amazon.accessKeyId, cfg.amazon.secretAccessKey, cfg.amazon.associateTag);
@@ -36,7 +36,7 @@
 
             if(result.Items.Request.Errors) {
                 result.Items.Request.Errors.forEach(function(error) {
-                    console.log(error.Message);
+                    console.log("ERROR: " + error.Message);
                 });
 
                 next(new NotFound());

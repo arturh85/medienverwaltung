@@ -1,9 +1,4 @@
 {
-    "loader": {
-        "controllers": ["./controllers"],
-        "models": ["./models"]
-    },
-
     "mongo": {
         "production": {
             "host": "localhost",
