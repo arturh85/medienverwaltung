@@ -23,8 +23,8 @@
                 res.header('Content-Type', 'application/json');
                 res.send(doc.toObject(), 200);
             });
-        }else{
-            next(new NotLoggedIn());
+        } else {
+            return next(new NotLoggedIn());
         }
     });
 }());
