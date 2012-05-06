@@ -70,11 +70,43 @@
                                          + cfg.mongo.production.name);
     });
 
-    // open db connection
+    // open mongodb connection
     var db = module.exports.db = mongoose.connect(app.set('mongoUrl'), function (err) {
         if (err) throw err;
         console.log("connected to mongodb: " + app.set('mongoUrl'));
     });
+
+    // file loader (for controllers, models, ...)
+    var loadJsDirectory = function (dir, run) {
+        fs.readdir(dir, function (err, files) {
+            if (err) {
+                throw err;
+            }
+
+            files.forEach(function (file) {
+                if (fileExtension(file) === '.js') {
+                    require(dir + '/' + file.replace('.js', ''));
+                }
+            });
+        });
+    };
+
+    loadJsDirectory("./models");
+    loadJsDirectory("./controllers");
+    module.exports.authProviders = [];
+
+    require("./authProviders/openid");
+    require("./authProviders/password");
+
+    module.exports.authProviders.forEach(function(auth_provider) {
+        auth_provider(everyauth);
+    });
+
+    everyauth.everymodule
+        .findUserById( function (userId, callback) {
+            var Model = db.model('user');
+            Model.findById(userId, callback);
+        });
 
     // define shortcut exceptions for setting correct HTTP status codes
     var NotFound = module.exports.NotFound = function (msg) {
@@ -98,76 +130,6 @@
     };
     sys.inherits(NotAllowed, Error);
 
-    // file loader (for controllers, models, ...)
-    var loadJsDirectory = function (dir) {
-        fs.readdir(dir, function (err, files) {
-            if (err) {
-                throw err;
-            }
-
-            files.forEach(function (file) {
-                if (fileExtension(file) === '.js') {
-                    require(dir + '/' + file.replace('.js', ''));
-                }
-            });
-        });
-    };
-
-    loadJsDirectory("./models");
-    loadJsDirectory("./controllers");
-
-    everyauth.openid
-        .myHostname(app.set('baseUrl'))
-        .openidURLField('openid_identifier') //The POST variable used to get the OpenID
-        .sendToAuthenticationUri(function(req,res) {
-            this.relyingParty.authenticate(req.query[this.openidURLField()], false, function(err,authenticationUrl){
-                if(err) return p.fail(err);
-                res.redirect(authenticationUrl);
-            });
-        })
-        .simpleRegistration({
-            "nickname": true, "email": true, "fullname": true, "dob": true, "gender": true,
-            "postcode": true, "country": true, "language": true, "timezone" : true
-        })
-        .attributeExchange({
-            "http://axschema.org/contact/email": "required"
-        })
-        .findOrCreateUser( function(session, openIdUserAttributes) {
-            var Model = db.model('user');
-
-            var userPromise = this.Promise();
-
-            var result = Model.findOne({claimedIdentifier: openIdUserAttributes.claimedIdentifier}, function(err, user) {
-                if (err) return userPromise.fail(err);
-                if (user) {
-                    console.log("authenticated: " + JSON.stringify(user));
-                    return userPromise.fulfill(user);
-                }
-
-                if(!user){
-                    user = new Model(openIdUserAttributes);
-                    user.save(function (err) {
-                        if(err) return userPromise.fail(err);
-                        console.log("authenticated: " + JSON.stringify(user));
-                        return userPromise.fulfill(user);
-                    });
-                }
-                return user;
-            });
-
-            return userPromise;
-        })
-        .redirectPath('/');
-
-    everyauth.everymodule
-        .findUserById( function (id, callback) {
-            var Model = db.model('user');
-            Model.findById(id, function (err, user) {
-                if (err) return callback(err);
-                callback(null, user);
-            });
-        });
-
     app.configure(function(){
         app.use(express.static(application_root + "/../frontend/app"));
         app.set('views', __dirname + '/views');
@@ -180,62 +142,6 @@
         app.use(app.router);
         everyauth.helpExpress(app);
     });
-
-    // Error 401
-    app.error(function (err, req, res, next) {
-        if (err instanceof NotLoggedIn) {
-            var msg = '401 Unauthorized';
-            //console.log(msg + ": " + JSON.stringify(req));
-            res.send(msg, 401);
-        } else {
-            next(err);
-        }
-    });
-
-    // Error 403
-    app.error(function (err, req, res, next) {
-        if (err instanceof NotAllowed) {
-            var msg = '403 Forbidden';
-            //console.log(msg + ": " + JSON.stringify(req));
-            res.send(msg, 403);
-        } else {
-            next(err);
-        }
-    });
-
-    // Error 404
-    app.error(function (err, req, res, next) {
-        if (err instanceof NotFound) {
-            var msg = '404 Not found';
-            //console.log(msg + ": " + JSON.stringify(req));
-            res.send(msg, 404);
-        } else {
-            next(err);
-        }
-    });
-
-    // Error 500
-    app.error(function (err, req, res) {
-        var msg = '500 Internal server error';
-        //console.log(msg + ": " + req.url);
-        res.send(msg, 500);
-    });
-
-    app.get('/logout', function (req, res) {
-        req.logout();
-        res.redirect('/');
-    });
-
-    /*
-     app.get('/private', function(req, res){
-     if(req.session.auth && req.session.auth.loggedIn){
-     res.render('private', {title: 'Protected'});
-     }else{
-     console.log("The user is NOT logged in");
-     res.redirect('/');
-     }
-     });
-     */
 
     // start server
     app.listen(serverPort, serverAddress);

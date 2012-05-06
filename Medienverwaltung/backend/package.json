@@ -3,7 +3,9 @@
     "version": "0.0.1",
     "private": true,
     "dependencies": {
-        "jade": ">= 0.26.0",
+        "jshashes": "0.1.3b",
+        "request": "2.9.202",
+        "jade": "0.26.0",
         "express": "2.5.8",
         "aws-lib": "0.0.6",
         "everyauth": "0.2.32",

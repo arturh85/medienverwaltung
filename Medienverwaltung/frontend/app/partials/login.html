@@ -12,26 +12,42 @@
         </tr>
     </table>
 </form>
-<br/><br/>
-<p>
-    Dont forget to enable OpenID support with your preferred provider first!
-</p>
 
-<div class="openid-links">
-    <a class="openid_large_btn" style="background: rgb(255, 255, 255) url(/img/openid/openid.png) no-repeat center center;" href="javascript: signin('openid');" title="OpenID"></a>
-    <a class="openid_large_btn" style="background: rgb(255, 255, 255) url(/img/openid/google.png) no-repeat center center;" href="javascript: signin('google');" title="Google"></a>
-    <a class="openid_large_btn" style="background: rgb(255, 255, 255) url(/img/openid/yahoo.png) no-repeat center center;" href="javascript: signin('yahoo');" title="Yahoo"></a>
-    <a class="openid_large_btn" style="background: rgb(255, 255, 255) url(/img/openid/aol.png) no-repeat center center;" href="javascript: signin('aol');" title="AOL"></a>
-    <a class="openid_small_btn" style="background: rgb(255, 255, 255) url(/img/openid/myopenid.png) no-repeat center center;" href="javascript: signin('myopenid');" title="MyOpenID"></a>
-    <a class="openid_small_btn" style="background: rgb(255, 255, 255) url(/img/openid/livejournal.png) no-repeat center center;" href="javascript: signin('livejournal');" title="LiveJournal"></a>
-    <a class="openid_small_btn" style="background: rgb(255, 255, 255) url(/img/openid/flickr.png) no-repeat center center;" href="javascript: signin('flickr');" title="Flickr"></a>
-    <a class="openid_small_btn" style="background: rgb(255, 255, 255) url(/img/openid/technorati.png) no-repeat center center;" href="javascript: signin('technorati');" title="Technorati"></a>
-    <a class="openid_small_btn" style="background: rgb(255, 255, 255) url(/img/openid/wordpress.png) no-repeat center center;" href="javascript: signin('wordpress');" title="Wordpress"></a>
-    <a class="openid_small_btn" style="background: rgb(255, 255, 255) url(/img/openid/blogger.png) no-repeat center center;" href="javascript: signin('blogger');" title="Blogger"></a>
-    <a class="openid_small_btn" style="background: rgb(255, 255, 255) url(/img/openid/verisign.png) no-repeat center center;" href="javascript: signin('verisign');" title="Verisign"></a>
-    <a class="openid_small_btn" style="background: rgb(255, 255, 255) url(/img/openid/vidoop.png) no-repeat center center;" href="javascript: signin('vidoop');" title="Vidoop"></a>
-    <a class="openid_small_btn" style="background: rgb(255, 255, 255) url(/img/openid/claimid.png) no-repeat center center;" href="javascript: signin('claimid');" title="ClaimID"></a>
-    <a class="openid_small_btn" style="background: rgb(255, 255, 255) url(/img/openid/myspace.jpg) no-repeat center center;" href="javascript: signin('myspace');" title="MySpace"></a>
+
+<div id="openid_choice">
+    <p class="script-only">Do you already have an account on one of these sites? Click the logo to
+        <b>log in</b> with it here:
+    </p>
+    <div class="script-only" id="openid_btns"><a class="stack_exchange openid_large_btn" style="background: url(&quot;http://cdn.sstatic.net/Img/openid/openid-logos.png?v=8&quot;) repeat scroll -1px -518px rgb(255, 255, 255);" href="javascript:openid.signin('stack_exchange');" title="log in with Stack Exchange"></a><div id="openid_highlight"><a class="google openid_large_btn" style="background: url(&quot;http://cdn.sstatic.net/Img/openid/openid-logos.png?v=8&quot;) repeat scroll -1px -1px rgb(255, 255, 255);" href="javascript:openid.signin('google');" title="log in with Google"></a></div><a class="yahoo openid_large_btn" style="background: url(&quot;http://cdn.sstatic.net/Img/openid/openid-logos.png?v=8&quot;) repeat scroll -1px -63px rgb(255, 255, 255);" href="javascript:openid.signin('yahoo');" title="log in with Yahoo"></a><a class="myopenid openid_large_btn" style="background: url(&quot;http://cdn.sstatic.net/Img/openid/openid-logos.png?v=8&quot;) repeat scroll -1px -187px rgb(255, 255, 255);" href="javascript:openid.signin('myopenid');" title="log in with MyOpenID"></a><a class="facebook openid_large_btn" style="background: url(&quot;http://cdn.sstatic.net/Img/openid/openid-logos.png?v=8&quot;) repeat scroll -1px -456px rgb(255, 255, 255);" href="javascript:openid.signin('facebook');" title="log in with Facebook"></a><br><div id="show-more-options" style="display: block;">
+        <div class="script-only" id="more-openid-options"><a class="livejournal openid_small_btn" style="background: url(&quot;http://cdn.sstatic.net/Img/openid/openid-logos.png?v=8&quot;) repeat scroll -1px -352px rgb(255, 255, 255);" href="javascript:openid.signin('livejournal');" title="log in with LiveJournal"></a><a class="wordpress openid_small_btn" style="background: url(&quot;http://cdn.sstatic.net/Img/openid/openid-logos.png?v=8&quot;) repeat scroll -1px -404px rgb(255, 255, 255);" href="javascript:openid.signin('wordpress');" title="log in with Wordpress"></a><a class="blogger openid_small_btn" style="background: url(&quot;http://cdn.sstatic.net/Img/openid/openid-logos.png?v=8&quot;) repeat scroll -1px -249px rgb(255, 255, 255);" href="javascript:openid.signin('blogger');" title="log in with Blogger"></a><a class="verisign openid_small_btn" style="background: url(&quot;http://cdn.sstatic.net/Img/openid/openid-logos.png?v=8&quot;) repeat scroll -1px -378px rgb(255, 255, 255);" href="javascript:openid.signin('verisign');" title="log in with Verisign"></a><a class="claimid openid_small_btn" style="background: url(&quot;http://cdn.sstatic.net/Img/openid/openid-logos.png?v=8&quot;) repeat scroll -1px -326px rgb(255, 255, 255);" href="javascript:openid.signin('claimid');" title="log in with ClaimID"></a><a class="clickpass openid_small_btn" style="background: url(&quot;http://cdn.sstatic.net/Img/openid/openid-logos.png?v=8&quot;) repeat scroll -1px -274px rgb(255, 255, 255);" href="javascript:openid.signin('clickpass');" title="log in with ClickPass"></a><a class="google_profile openid_small_btn" style="background: url(&quot;http://cdn.sstatic.net/Img/openid/openid-logos.png?v=8&quot;) repeat scroll -1px -300px rgb(255, 255, 255);" href="javascript:openid.signin('google_profile');" title="log in with Google Profile"></a><a class="aol openid_small_btn" style="background: url(&quot;http://cdn.sstatic.net/Img/openid/openid-logos.png?v=8&quot;) repeat scroll -27px -249px rgb(255, 255, 255);" href="javascript:openid.signin('aol');" title="log in with AOL"></a></div>
+
+        <!-- /Simple OpenID Selector -->
+        <div id="simple-openid-selector">
+            <div class="script-only" id="openid_input_area">
+                <p id="openid_provider_label"></p>
+                <input type="text" value="" name="openid_username" id="openid_username">
+                <input type="submit" value="Sign In" id="openid_submit" style="cursor: default;">
+            </div>
+            <div id="openid-url-input-area">
+                <noscript>
+                    &lt;p class="noscript-notice"&gt;Because JavaScript is disabled, you can only log in by entering your OpenID URL manually:&lt;/p&gt;
+                </noscript>
+                <p class="script-only">Or, you can manually enter your OpenID</p>
+                <table id="openid-url-input">
+                    <tbody><tr>
+                        <td class="vt large">
+                            <input type="text" tabindex="100" style="height:28px; width:500px;" class="openid-identifier" name="openid_identifier" id="openid_identifier">
+                        </td>
+                        <td class="vt large">
+                            <input type="submit" tabindex="101" value="Log in" style="margin-left:5px; height:36px;" id="submit-button">
+                        </td>
+                    </tr>
+                    </tbody></table>
+            </div>
+        </div>
+    </div></div>
+
+
 </div>
 
 <h1>What is OpenID?</h1>

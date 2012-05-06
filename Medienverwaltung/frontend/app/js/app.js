@@ -13,6 +13,7 @@
         $routeProvider.when('/login', {template: 'partials/login.html', controller: LoginController});
         $routeProvider.when('/profile/:id', {template: 'partials/profile.html', controller: ProfileController});
         $routeProvider.when('/profile', {template: 'partials/prfile.html', controller: ProfileController});
+        $routeProvider.when('/amazon/search/:query', {template: 'partials/amazon/search.html', controller: AmazonSearchController});
         $routeProvider.when('/media/edit/:id', {template: 'partials/media/form.html', controller: MediaEditController});
         $routeProvider.when('/media/:type', {template: 'partials/media/browse.html', controller: MediaListController});
         $routeProvider.when('/media', {template: 'partials/media/browse.html', controller: MediaListController});

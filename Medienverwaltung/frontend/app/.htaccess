@@ -8,4 +8,5 @@ Options +FollowSymLinks -Indexes -MultiViews
     RewriteRule ^amazon/(.+) http://localhost:3000/amazon/$1 [P]
     RewriteRule ^user/(.+) http://localhost:3000/user/$1 [P]
     RewriteRule ^auth/(.+) http://localhost:3000/auth/$1 [P]
+    RewriteRule ^media/(.+) http://localhost:3000/media/$1 [P]
 </IfModule>

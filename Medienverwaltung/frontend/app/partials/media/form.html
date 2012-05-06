@@ -1,11 +1,12 @@
+{{ media | json }}
+
 <form name="myForm">
-    <div class="control-group" ng-class="{error: myForm.isbn.$invalid}">
+    <div ng-show="media.isbn" class="control-group" ng-class="{error: myForm.isbn.$invalid}">
         <label>ISBN</label>
         <input type="text" name="isbn" ng-model="media.isbn" required>
 
-        <span ng-show="myForm.isbn.$error.required" class="help-inline">
-            Required
-        </span>
+        <button ng-click="fetchAmazonByISBN()" ng-disabled="!media.isbn || media.isbn.length != 10" />Fetch from Amazon Webservice </button>
+        <span class="warning" ng-show="media.isbn && media.isbn.length != 10">Invalid ISBN!</span>
     </div>
 
     <br>
@@ -18,7 +19,7 @@
 
 <div>
     <table>
-        <tr ng-repeat="(property, value) in amazonData">
+        <tr ng-repeat="(property, value) in media">
             <th>{{property}}</th>
 
             <td>
