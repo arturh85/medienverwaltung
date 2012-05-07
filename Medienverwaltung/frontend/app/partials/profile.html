@@ -1,12 +1,13 @@
 <form name="myForm" ng-show="user">
-    <div class="control-group">
+    <div class="control-group" ng-show="user.claimedIdentifier">
         <label>OpenID URL</label>
 
         <span>{{user.claimedIdentifier}}</span>
     </div>
+
     <div class="control-group">
         <label>Nickname</label>
-        <input type="text" name="nickname" ng-model="user.nickname" required>
+        <input type="text" name="nickname" ng-model="user.nickname">
     </div>
 
     <div class="control-group">
@@ -16,27 +17,27 @@
 
     <div class="control-group" ng-show="user.fullname">
         <label>Name</label>
-        <input type="text" name="fullname" ng-model="user.fullname" required>
+        <input type="text" name="fullname" ng-model="user.fullname">
     </div>
 
     <div class="control-group" ng-show="user.gender">
         <label>Gender</label>
-        <input type="text" name="gender" ng-model="user.gender" required>
+        <input type="text" name="gender" ng-model="user.gender">
     </div>
 
     <div class="control-group" ng-show="user.country">
         <label>Country</label>
-        <input type="text" name="country" ng-model="user.country" required>
+        <input type="text" name="country" ng-model="user.country">
     </div>
 
     <div class="control-group" ng-show="user.language">
         <label>Language</label>
-        <input type="text" name="language" ng-model="user.language" required>
+        <input type="text" name="language" ng-model="user.language">
     </div>
 
     <div class="control-group" ng-show="user.timezone">
         <label>Timezone</label>
-        <input type="text" name="timezone" ng-model="user.timezone" required>
+        <input type="text" name="timezone" ng-model="user.timezone">
     </div>
 
     <div ng-show="user._id == auth._id">

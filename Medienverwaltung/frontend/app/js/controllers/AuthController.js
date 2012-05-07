@@ -1,15 +1,23 @@
-function AuthController($rootScope, $http) {
+function AuthController($rootScope, $scope, $http, $location) {
     console.log("authcontroller!");
 
+    $scope.signin = function(provider) {
+         if(provider == 'myopenid') {
+
+         }
+    };
+
     $rootScope.auth = undefined;
+
     $http({method: 'GET', url: '/user/me'}).
         success(function(data, status, headers, config) {
             $rootScope.auth = data;
             console.log("successfully authenticated");
+            console.log("path: " + $location.path());
         }).
         error(function(data, status, headers, config) {
             $rootScope.auth === false;
             console.log("failed with status " + status + ": " + data);
         });
 }
-AuthController.$inject = ["$rootScope", "$http"];
+AuthController.$inject = ["$rootScope", "$scope", "$http", "$location"];

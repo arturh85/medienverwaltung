@@ -28,3 +28,42 @@
   content: "";
   padding: 0;
 }
+
+
+.openid_large_btn {
+    -moz-border-bottom-colors: none;
+    -moz-border-image: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: #DDDDDD #CCCCCC #CCCCCC #DDDDDD;
+    border-radius: 5px 5px 5px 5px;
+    border-style: solid;
+    border-width: 2px;
+    box-shadow: 2px 2px 4px #DDDDDD;
+    float: left;
+    height: 60px;
+    margin: 3px;
+    width: 100px;
+}
+
+.openid_small_btn {
+    -moz-border-bottom-colors: none;
+    -moz-border-image: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: #DDDDDD #CCCCCC #CCCCCC #DDDDDD;
+    border-radius: 5px 5px 5px 5px;
+    border-style: solid;
+    border-width: 2px;
+    box-shadow: 2px 2px 4px #DDDDDD;
+    float: left;
+    height: 24px;
+    margin: 3px;
+    width: 24px;
+}
+
+.script-only {
+    display: block;
+}
