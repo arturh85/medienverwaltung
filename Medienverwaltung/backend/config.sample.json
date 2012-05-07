@@ -3,17 +3,20 @@
         "production": {
             "host": "localhost",
             "port": 27017,
-            "name": "medienverwaltung"
+            "name": "medienverwaltung",
+            "sessionName": "session"
         },
         "development": {
             "host": "localhost",
             "port": 27017,
-            "name": "medienverwaltung"
+            "name": "medienverwaltung",
+            "sessionName": "session"
         },
         "test": {
             "host": "localhost",
             "port": 27017,
-            "name": "medienverwaltung_test"
+            "name": "medienverwaltung_test",
+            "sessionName": "session"
         }
     },
 
@@ -31,13 +34,22 @@
         "test": {
             "addr": "localhost",
             "port": 3333,
-            "url": "http://localhost:3000"
+            "url": "http://localhost:3333"
         }
     },
 
     "amazon": {
+        "enabled": false,
+
         "accessKeyId": "",
         "secretAccessKey": "",
         "associateTag": ""
+    },
+
+    "facebook": {
+        "enabled": false,
+
+        "appId": "",
+        "appSecret": ""
     }
 }

@@ -5,7 +5,6 @@
         db = module.parent.exports.db,
         authProviders = module.parent.exports.authProviders;
 
-
     authProviders.push(function(everyauth) {
         everyauth.openid
             .myHostname(app.set('baseUrl'))
@@ -27,7 +26,7 @@
                 "http://axschema.org/contact/email": "required"
             })
             .findOrCreateUser( function(session, openIdUserAttributes) {
-                console.log("findOrCreateUser");
+                console.log("findOrCreateUser openid");
                 var Model = db.model('user');
 
                 var userPromise = this.Promise();

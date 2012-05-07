@@ -19,7 +19,9 @@
         publicationDate: Date,
         publisher: String,
         studio: String,
-        sku: String
+        sku: String,
+
+        imageUrl: String
     });
 
     mongoose.model('media', Media);

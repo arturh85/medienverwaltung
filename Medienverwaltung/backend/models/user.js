@@ -15,7 +15,12 @@
     var User = new mongoose.Schema({
         claimedIdentifier: String,
         email: {type: String, required: true, unique: true, trim: true, lowercase: true },
-        password: {type: String, set: encodePassword, required: false }
+        password: {type: String, set: encodePassword, required: false },
+
+        fbId: String,
+        fullname: String,
+        fbLink: String,
+        gender: String
     });
 
     User.statics.classicLogin = function(login, pass, cb) {

@@ -12,7 +12,8 @@
     // include 3rd-party libraries
     var express = require('express'),
         mongoose = require('mongoose'),
-        everyauth = module.exports.everyauth = require('everyauth');
+        everyauth = module.exports.everyauth = require('everyauth'),
+        sessionMongoose = require("session-mongoose");
 
     var serverAddress,
         serverPort,
@@ -42,6 +43,10 @@
         app.set('mongoUrl', 'mongodb://' + cfg.mongo.development.host + ':'
                                         + cfg.mongo.development.port + '/'
                                         + cfg.mongo.development.name);
+
+        app.set('mongoSessionUrl', 'mongodb://' + cfg.mongo.development.host + ':'
+                                                + cfg.mongo.development.port + '/'
+                                                + cfg.mongo.development.sessionName);
     });
 
     app.configure('test', function () {
@@ -54,6 +59,10 @@
         app.set('mongoUrl', 'mongodb://' + cfg.mongo.test.host + ':'
                                          + cfg.mongo.test.port + '/'
                                          + cfg.mongo.test.name);
+
+        app.set('mongoSessionUrl', 'mongodb://' + cfg.mongo.test.host + ':'
+                                                + cfg.mongo.test.port + '/'
+                                                + cfg.mongo.test.sessionName);
     });
 
     app.configure('production', function () {
@@ -68,12 +77,21 @@
         app.set('mongoUrl', 'mongodb://' + cfg.mongo.production.host + ':'
                                          + cfg.mongo.production.port + '/'
                                          + cfg.mongo.production.name);
+
+        app.set('mongoSessionUrl', 'mongodb://' + cfg.mongo.production.host + ':'
+                                                + cfg.mongo.production.port + '/'
+                                                + cfg.mongo.production.sessionName);
     });
 
     // open mongodb connection
     var db = module.exports.db = mongoose.connect(app.set('mongoUrl'), function (err) {
         if (err) throw err;
         console.log("connected to mongodb: " + app.set('mongoUrl'));
+    });
+
+    var mongooseSessionStore = new sessionMongoose({
+        url: app.set('mongoSessionUrl'),
+        interval: 120000 // expiration check worker run interval in millisec (default: 60000)
     });
 
     // file loader (for controllers, models, ...)
@@ -96,10 +114,11 @@
     module.exports.authProviders = [];
 
     require("./authProviders/openid");
+    require("./authProviders/facebook");
     require("./authProviders/password");
 
-    module.exports.authProviders.forEach(function(auth_provider) {
-        auth_provider(everyauth);
+    module.exports.authProviders.forEach(function(registerAuthProvider) {
+        registerAuthProvider(everyauth);
     });
 
     everyauth.everymodule
@@ -136,7 +155,10 @@
         app.set('view engine', 'jade');
         app.use(express.bodyParser());
         app.use(express.cookieParser());
-        app.use(express.session({ secret: 'aj34jjSU4Z9!d$' }));
+        app.use(express.session({
+            secret: 'aj34jjSU4Z9!d$',
+            store: mongooseSessionStore
+        }));
         app.use(express.methodOverride());
         app.use(everyauth.middleware());
         app.use(app.router);
