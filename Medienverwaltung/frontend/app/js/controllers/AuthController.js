@@ -1,12 +1,6 @@
 function AuthController($rootScope, $scope, $http, $location) {
     console.log("authcontroller!");
 
-    $scope.signin = function(provider) {
-         if(provider == 'myopenid') {
-
-         }
-    };
-
     $rootScope.auth = undefined;
 
     $http({method: 'GET', url: '/user/me'}).

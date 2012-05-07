@@ -9,28 +9,28 @@
         <div class="script-only" id="openid_btns">
             <a class="stack_exchange openid_large_btn"
                style="background: url('/img/openid-logos.png') repeat scroll -1px -518px rgb(255, 255, 255);"
-               ng-click="signin('password')"
+               ng-click="signinPassword()"
                title="log in with Medienverwaltung.net account"></a>
 
             <a class="google openid_large_btn"
                style="background: url('/img/openid-logos.png') repeat scroll -1px -1px rgb(255, 255, 255);"
-               ng-click="signin('google')" title="log in with Google"></a>
+               ng-click="signinGoogle()" title="log in with Google"></a>
 
             <a class="yahoo openid_large_btn"  ng-show="false"
                style="background: url('/img/openid-logos.png') repeat scroll -1px -63px rgb(255, 255, 255);"
-               ng-click="signin('yahoo')" title="log in with Yahoo"></a>
+               ng-click="signinYahoo()" title="log in with Yahoo"></a>
 
             <a class="myopenid openid_large_btn"
                style="background: url('/img/openid-logos.png') repeat scroll -1px -187px rgb(255, 255, 255);"
-               ng-click="signin('myopenid')" title="log in with MyOpenID"></a>
+               ng-click="signinMyOpenid()" title="log in with MyOpenID"></a>
 
             <a class="facebook openid_large_btn"
                style="background: url('/img/openid-logos.png') repeat scroll -1px -456px rgb(255, 255, 255);"
-               ng-click="signin('facebook')" title="log in with Facebook"></a>
+               ng-click="signinFacebook()" title="log in with Facebook"></a>
 
             <br>
 
-            <div id="show-more-options" style="display: block; float: left;" >
+            <div id="show-more-options" style="display: block; float: left;" ng-show="!usePasswordLogin">
                 <div class="script-only" id="more-openid-options" ng-show="false">
                     <a class="livejournal openid_small_btn"
                        style="background: url('/img/openid-logos.png') repeat scroll -1px -352px rgb(255, 255, 255);"
@@ -67,7 +67,7 @@
                 </div>
 
                 <!-- /Simple OpenID Selector -->
-                <div id="simple-openid-selector" style=" float: left;">
+                <div id="simple-openid-selector" style=" float: left;" ng-show="!usePasswordLogin">
                     <div id="openid-url-input-area">
                         <noscript>
                             <p class="noscript-notice">Because JavaScript is disabled, you can only log in by
@@ -89,6 +89,16 @@
                             </tbody>
                         </table>
                     </div>
+                </div>
+                <!-- Password Login -->
+                <div id="password-login" style=" float: left;" ng-show="usePasswordLogin">
+                    <p class="script-only">Password Login</p>
+                    <input type="text" style="height:28px; width:500px;"
+                           class="openid-identifier" ng-model="email" />
+                    <input type="text" style="height:28px; width:500px;"
+                           class="openid-identifier" ng-model="password" />
+
+                    <button ng-click="passwordLogin()"></button>
                 </div>
             </div>
         </div>
