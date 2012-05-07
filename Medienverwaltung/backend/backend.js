@@ -127,7 +127,7 @@
             Model.findById(userId, callback);
         });
 
-    // define shortcut exceptions for setting correct HTTP status codes
+    // define shortcut exceptions for setting correct HTTP status codes, see controllers/error.js
     var NotFound = module.exports.NotFound = function (msg) {
         this.name = 'NotFound';
         Error.call(this, msg);
@@ -149,6 +149,46 @@
     };
     sys.inherits(NotAllowed, Error);
 
+    // Error 401
+    app.error(function (err, req, res, next) {
+        if (err instanceof NotLoggedIn) {
+            var msg = '401 Unauthorized';
+            //console.log(msg + ": " + JSON.stringify(req));
+            res.send(msg, 401);
+        } else {
+            next(err);
+        }
+    });
+
+    // Error 403
+    app.error(function (err, req, res, next) {
+        if (err instanceof NotAllowed) {
+            var msg = '403 Forbidden';
+            //console.log(msg + ": " + JSON.stringify(req));
+            res.send(msg, 403);
+        } else {
+            next(err);
+        }
+    });
+
+    // Error 404
+    app.error(function (err, req, res, next) {
+        if (err instanceof NotFound) {
+            var msg = '404 Not found';
+            //console.log(msg + ": " + JSON.stringify(req));
+            res.send(msg, 404);
+        } else {
+            next(err);
+        }
+    });
+
+    // Error 500
+    app.error(function (err, req, res) {
+        var msg = '500 Internal server error';
+        console.log(err + ": " + JSON.stringify(err));
+        res.send(msg, 500);
+    });
+
     app.configure(function(){
         app.use(express.static(application_root + "/../frontend/app"));
         app.set('views', __dirname + '/views');
@@ -156,7 +196,7 @@
         app.use(express.bodyParser());
         app.use(express.cookieParser());
         app.use(express.session({
-            secret: 'aj34jjSU4Z9!d$',
+            secret: cfg.security.sessionSecret,
             store: mongooseSessionStore
         }));
         app.use(express.methodOverride());

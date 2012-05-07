@@ -1,33 +1,55 @@
 (function () {
     "use strict";
 
+
+    var cfg = module.parent.exports.cfg;
+
     var mongoose = require("mongoose"),
-        salt = 'mySaltyString',
+        salt = cfg.security.salt,
         SHA2 = new (require('jshashes').SHA512)();
 
-    function encodePassword( pass ){
-        if( typeof pass === 'string' && pass.length < 6 )
+
+    require("../types/email.js").loadType(mongoose);
+
+    function encodePassword(pass) {
+        if (typeof pass === 'string' && pass.length < 6)
             return ''
 
-        return SHA2.b64_hmac(pass, salt )
+        return SHA2.b64_hmac(pass, salt)
     }
 
-    var User = new mongoose.Schema({
-        claimedIdentifier: String,
-        email: {type: String, required: true, unique: true, trim: true, lowercase: true },
-        password: {type: String, set: encodePassword, required: false },
+    // from ../types/email.js
+    var Email = mongoose.SchemaTypes.Email;
 
-        fbId: String,
-        fullname: String,
-        fbLink: String,
-        gender: String
+    var User = new mongoose.Schema({
+        // user attributes
+        fullname:String,
+        gender:String,
+        email:{type:Email, required:true, unique:true, trim:true, lowercase:true },
+        validatedEmail:String,
+
+
+        // for password login
+        password:{type:String, set:encodePassword, required:false },
+
+        // for openid login
+        claimedIdentifier:String,
+
+        // for facebook login
+        fbId:String,
+        fbLink:String,
+
+        // originally received metadata
+        openIdMetaData:{},
+        facebookMetaData:{}
+
     });
 
-    User.statics.classicLogin = function(login, pass, cb) {
+    User.statics.classicLogin = function (login, pass, cb) {
         mongoose.models.User
-            .where( 'email', login )
-            .where( 'password', encodePassword(pass) )
-            .findOne( cb );
+            .where('email', login)
+            .where('password', encodePassword(pass))
+            .findOne(cb);
     }
 
     mongoose.model('user', User);

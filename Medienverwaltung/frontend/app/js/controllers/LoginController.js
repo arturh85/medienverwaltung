@@ -4,24 +4,15 @@ function LoginController($scope, $http, $location) {
     $scope.usePasswortLogin = false;
 
     $scope.signinMyOpenid = function() {
-        console.log("signinMyOpenid");
         document.location = "/auth/openid?openid_identifier=http://myopenid.com/#";
     };
 
     $scope.signinGoogle = function() {
-        console.log("signinGoogle");
         document.location = "/auth/openid?openid_identifier=https://www.google.com/accounts/o8/id#";
     };
 
     $scope.signinFacebook = function() {
-        console.log("signinFacebook");
-        //$location.url("/auth/facebook#");
         document.location = "/auth/facebook";
-    };
-
-    $scope.signinPassword = function() {
-        console.log("signinPassword");
-        $scope.usePasswortLogin = !$scope.usePasswortLogin;
     };
 
     $scope.passwordLogin = function() {

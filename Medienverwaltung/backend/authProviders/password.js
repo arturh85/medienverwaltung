@@ -5,21 +5,20 @@
         db = module.parent.exports.db,
         authProviders = module.parent.exports.authProviders;
 
-    var jshashes = require("jshashes");
-
-
     authProviders.push(function(everyauth) {
         everyauth.password
             .loginWith('email')
-            .getLoginPath('/login') // Uri path to the login page
+            .getLoginPath('/#/login') // Uri path to the login page
             .postLoginPath('/login') // Uri path that your login form POSTs to
-            .getRegisterPath('/register') // Uri path to the registration page
+            .getRegisterPath('/#/register') // Uri path to the registration page
             .postRegisterPath('/register') // The Uri path that your registration form POSTs to
-            /*
-            .simpleRegistration({
-                "nickname": true, "email": true, "fullname": true, "dob": true, "gender": true,
-                "postcode": true, "country": true, "language": true, "timezone" : true
-            })*/
+            .addToSession( function (sess, user, errors) {
+                var _auth = sess.auth || (sess.auth = {});
+                if (user)
+                    _auth.userId = user.id;
+                _auth.loggedIn = !!user;
+                _auth.loginMethod = 'password';
+            })
             .authenticate( function(login, password) {
                 var promise
                     , errors = [];
@@ -27,7 +26,7 @@
                 if (!password) errors.push('Missing password.');
                 if (errors.length) return errors;
 
-                console.log("authenticate");
+                console.log("password authentication");
 
                 var userPromise = this.Promise();
 
@@ -38,7 +37,9 @@
                     }
 
                     if(!user) {
-                        errors.push('User with login ' + login + ' does not exist.');
+                        var msg = 'User with login ' + login + ' does not exist.';
+                        console.log(msg);
+                        errors.push(msg);
                         return promise.fulfill(errors);
                     }
 
@@ -49,16 +50,10 @@
                 return userPromise;
             })
             .validateRegistration( function (newUserAttributes) {
-                // Validate the registration input
-                // Return undefined, null, or [] if validation succeeds
-                // Return an array of error messages (or Promise promising this array)
-                // if validation fails
-                //
-                // e.g., assuming you define validate with the following signature
-                // var errors = validate(login, password, extraParams);
-                // return errors;
-                //
-                // The `errors` you return show up as an `errors` local in your jade template
+                var errors = [];
+                if (!newUserAttributes.email) errors.push('Missing email address.');
+                if (!newUserAttributes.password) errors.push('Missing password.');
+                if (errors.length) return errors;
             })
             .registerUser( function (newUserAttributes) {
                 var promise = this.Promise()

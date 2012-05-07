@@ -19,7 +19,8 @@
                 // that.
                 // If you do not configure this, everyauth renders a default fallback
                 // view notifying the user that their authentication failed and why.
-                console.log(res);
+                console.log("Facebook auth failed: " + JSON.stringify(req.params));
+                res.redirect("/#/login/error/Facebook Login failed");
             })
             .findOrCreateUser( function(session, accessToken, accessTokenExtra, fbUserMetadata) {
                 console.log("findOrCreateUser facebook");
@@ -36,20 +37,26 @@
 
                     if(!user){
                         user = new Model();
+
+                        // map attributes to user schema
                         user.fbId = fbUserMetadata.id;
                         user.fullname = fbUserMetadata.name;
                         user.fbLink = fbUserMetadata.link;
                         user.email = fbUserMetadata.email;
                         user.gender = fbUserMetadata.gender == "male" ? "m" : "f";
 
-                        try {
-                        user.save(function (err) {
-                            if(err) return userPromise.fail(err);
-                            console.log("authenticated: " + JSON.stringify(user));
-                            return userPromise.fulfill(user);
-                        });
-                        } catch(e) {
+                        // preserve original metadata
+                        user.facebookMetaData = fbUserMetadata;
 
+                        try {
+                            user.save(function (err) {
+                                if(err) return userPromise.fail(err);
+                                console.log("authenticated: " + JSON.stringify(user));
+                                return userPromise.fulfill(user);
+                            });
+                        } catch(e) {
+                            console.log("error saving user: " + JSON.stringify(e));
+                            res.redirect("/#/login/error/" + e.message);
                         }
                     }
                 });

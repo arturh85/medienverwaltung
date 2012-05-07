@@ -12,8 +12,7 @@
             .sendToAuthenticationUri(function(req,res) {
                 this.relyingParty.authenticate(req.query[this.openidURLField()], false, function(err,authenticationUrl){
                     if(err) {
-                        console.log("err: " + JSON.stringify(err));
-                        throw Error(err.message);
+                        return res.redirect("/#/login/error/" + err.message);
                     }
                     res.redirect(authenticationUrl);
                 });
@@ -39,7 +38,15 @@
                     }
 
                     if(!user){
-                        user = new Model(openIdUserAttributes);
+                        user = new Model();
+
+                        user.claimedIdentifier = openIdUserAttributes.claimedIdentifier;
+                        user.email = openIdUserAttributes.email;
+                        user.fullname = openIdUserAttributes.fullname;
+                        user.gender = openIdUserAttributes.gender;
+
+                        user.openIdMetaData = openIdUserAttributes;
+
                         user.save(function (err) {
                             if(err) return userPromise.fail(err);
                             console.log("authenticated: " + JSON.stringify(user));

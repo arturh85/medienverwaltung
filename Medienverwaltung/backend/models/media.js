@@ -21,7 +21,9 @@
         studio: String,
         sku: String,
 
-        imageUrl: String
+        imageUrl: String,
+
+        amazonMetaData: {}
     });
 
     mongoose.model('media', Media);

@@ -12,11 +12,7 @@ function ProfileController($scope, $route, UserCollection, $location) {
     }
 
     if(id == 'me') {
-        if($scope.auth == undefined) {
 
-        }
-
-        id = $scope.auth._id;
     }
 
     UserCollection.get({id: id}, function(user) {

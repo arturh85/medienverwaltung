@@ -1,5 +1,8 @@
-function AuthController($rootScope, $scope, $http, $location) {
-    console.log("authcontroller!");
+var authControllerLoaded = false;
+
+function AuthController($rootScope, $http, $location) {
+    if(authControllerLoaded) return ;
+    authControllerLoaded = true;
 
     $rootScope.auth = undefined;
 
@@ -10,8 +13,8 @@ function AuthController($rootScope, $scope, $http, $location) {
             console.log("path: " + $location.path());
         }).
         error(function(data, status, headers, config) {
-            $rootScope.auth === false;
-            console.log("failed with status " + status + ": " + data);
+            $rootScope.auth = false;
+            console.log("authentication failed with status " + status + ": " + data);
         });
 }
-AuthController.$inject = ["$rootScope", "$scope", "$http", "$location"];
+AuthController.$inject = ["$rootScope", "$http", "$location"];

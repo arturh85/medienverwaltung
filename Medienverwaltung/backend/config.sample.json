@@ -38,6 +38,11 @@
         }
     },
 
+    "security": {
+        "passwordSalt": "myPasswordSalt",
+        "sessionSecret": "mySessionSecret"
+    },
+
     "amazon": {
         "enabled": false,
 

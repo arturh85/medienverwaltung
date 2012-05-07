@@ -10,6 +10,7 @@
         'medienverwaltung.collections'
     ]).
       config(['$routeProvider', function($routeProvider) {
+        $routeProvider.when('/login/error/:message', {template: 'partials/login.html', controller: LoginController});
         $routeProvider.when('/login', {template: 'partials/login.html', controller: LoginController});
         $routeProvider.when('/profile/:id', {template: 'partials/profile.html', controller: ProfileController});
         $routeProvider.when('/profile', {template: 'partials/prfile.html', controller: ProfileController});
