@@ -1,0 +1,34 @@
+<h1>Register</h1>
+
+<form name="myForm" method="post" action="/register">
+    <div class="control-group" ng-show="user.claimedIdentifier">
+        <label>OpenID URL</label>
+
+        <span>{{user.claimedIdentifier}}</span>
+    </div>
+
+    <div class="control-group">
+        <label>Nickname</label>
+        <input type="text" name="nickname" ng-model="user.nickname" />
+    </div>
+
+    <div class="control-group">
+        <label>E-Mail</label>
+        <input type="text" name="email" ng-model="user.email" required>
+    </div>
+    <div class="control-group">
+        <label>Password</label>
+        <input type="password" name="password" ng-model="user.password" required>
+    </div>
+
+    <div class="control-group">
+        <label>Password again</label>
+        <input type="password" ng-model="passwordRepeat" required>
+    </div>
+
+        <br>
+        <a href="#/login" class="btn">Cancel</a>
+    <input type="submit"
+           ng-disabled="isClean() || myForm.$invalid || user.password != passwordRepeat"
+           class="btn btn-primary" value="Save" />
+</form>
