@@ -11,10 +11,6 @@ function ProfileController($scope, $route, UserCollection, $location) {
         return ;
     }
 
-    if(id === 'me') {
-
-    }
-
     UserCollection.get({id: id}, function(user) {
         $scope.original = angular.copy(user);
         $scope.user = user;

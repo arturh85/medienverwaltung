@@ -2,7 +2,7 @@
 <project name="Medienverwaltung" default="help">
     <property name="reports.dir" value="reports" />
     <property name="jars.dir" value="libs" />
-    <property name="browser" value="/usr/bin/iceweasel,/usr/bin/chromium" />
+    <property name="browser" value="/usr/bin/iceweasel" />
 
     <target name="help">
         <echo>Medienverwaltung Ant Tools. Available targets:</echo>
@@ -44,7 +44,7 @@
             </fileset>
         </jslint>
 
-        <loadfile property="jslintResults" srcFile="${reports.dir}/jslint.txt"/>
+        <loadfile quiet="true" property="jslintResults" srcFile="${reports.dir}/jslint.txt"/>
         <echo>${jslintResults}</echo>
     </target>
 
