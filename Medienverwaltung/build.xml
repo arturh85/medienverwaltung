@@ -28,7 +28,7 @@
 
     <target name="run-jslint">
         <mkdir dir="${reports.dir}/jslint" />
-        <jslint haltOnFailure="true" options="es5,white,node,sloppy,undef,unparam,plusplus,newcap,vars,nomen,indent=4">
+        <jslint haltOnFailure="false" options="es5,white,node,sloppy,undef,unparam,plusplus,newcap,vars,nomen,indent=4">
             <predef>jQuery, setTimeout, history, window, document, angular, console, __dirname, require, module, browser, element, describe, beforeEach, it, expect, inject</predef>
             <formatter type="junit" destfile="${reports.dir}/jslint" />
             <formatter type="plain" destfile="${reports.dir}/jslint.txt" />
@@ -43,6 +43,9 @@
                 <exclude name="frontend/app/js/jcrop/js/*.js" />
             </fileset>
         </jslint>
+
+        <loadfile property="jslintResults" srcFile="${reports.dir}/jslint.txt"/>
+        <echo>${jslintResults}</echo>
     </target>
 
     <target name="run-jstestdriver" description="Runs the js unit tests">
