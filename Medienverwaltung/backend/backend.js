@@ -13,7 +13,7 @@
     var express = require('express'),
         mongoose = require('mongoose'),
         everyauth = module.exports.everyauth = require('everyauth'),
-        sessionMongoose = require("session-mongoose");
+        SessionMongoose = require("session-mongoose");
 
     var serverAddress,
         serverPort,
@@ -85,11 +85,13 @@
 
     // open mongodb connection
     var db = module.exports.db = mongoose.connect(app.set('mongoUrl'), function (err) {
-        if (err) throw err;
+        if (err) {
+            throw err;
+        }
         console.log("connected to mongodb: " + app.set('mongoUrl'));
     });
 
-    var mongooseSessionStore = new sessionMongoose({
+    var mongooseSessionStore = new SessionMongoose({
         url: app.set('mongoSessionUrl'),
         interval: 120000 // expiration check worker run interval in millisec (default: 60000)
     });
@@ -189,8 +191,10 @@
         res.send(msg, 500);
     });
 
+    var staticString = "static";
+
     app.configure(function(){
-        app.use(express.static(application_root + "/../frontend/app"));
+        app.use(express[staticString](application_root + "/../frontend/app"));
         app.set('views', __dirname + '/views');
         app.set('view engine', 'jade');
         app.use(express.bodyParser());

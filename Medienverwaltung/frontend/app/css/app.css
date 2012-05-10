@@ -68,9 +68,14 @@
     display: block;
 }
 label {
-    float: left;
+    display: block;
     font-size: 1.4em;
     margin-right: 15px;
     padding-top: 5px;
-    width: 120px;
+    width: 140px;
+}
+
+
+.control-group {
+    clear: both;
 }

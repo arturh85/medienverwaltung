@@ -5,13 +5,13 @@ function ProfileController($scope, $route, UserCollection, $location) {
     var query = {};
     var id = $scope.params.id;
 
-    if(id == undefined) {
+    if(id === undefined) {
         console.log("tried to view your profile page without beeing logged in");
         $location.path("/login");
         return ;
     }
 
-    if(id == 'me') {
+    if(id === 'me') {
 
     }
 

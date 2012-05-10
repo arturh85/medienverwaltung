@@ -20,7 +20,7 @@
                 if (!doc) {
                     return next(new NotFound());
                 }
-                if(doc.userId != userId) {
+                if(doc.userId !== userId) {
                     return next(new NotAllowed());
                 }
 

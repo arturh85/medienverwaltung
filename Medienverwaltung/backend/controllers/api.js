@@ -73,7 +73,7 @@
 
             var userId = req.session.auth.userId;
 
-            if(doc.userId != userId) {
+            if(doc.userId !== userId) {
                 return next(new NotAllowed());
             }
 
@@ -116,11 +116,13 @@
                 throw err;
             }
 
-            if (!doc) return next(new NotFound());
+            if (!doc) {
+                return next(new NotFound());
+            }
 
             // check authorisation
             var userId = req.session.auth.userId;
-            if(doc.userId != userId) {
+            if(doc.userId !== userId) {
                 return next(new NotAllowed());
             }
 
@@ -145,11 +147,13 @@
                 throw err;
             }
 
-            if (!doc) return next(new NotFound());
+            if (!doc) {
+                return next(new NotFound());
+            }
 
             // check authorisation
             var userId = req.session.auth.userId;
-            if(doc.userId != userId) {
+            if(doc.userId !== userId) {
                 return next(new NotAllowed());
             }
 

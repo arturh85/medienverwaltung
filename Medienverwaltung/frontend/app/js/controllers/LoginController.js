@@ -31,6 +31,6 @@ function LoginController($scope, $http, $location) {
             error(function(data, status, headers, config) {
                 console.log("failed");
             });
-    }
+    };
 }
 LoginController.$inject = ["$scope", "$http", "$location"];

@@ -1,22 +1,12 @@
 (function () {
     "use strict";
 
+    var cfg = module.exports.cfg = module.parent.exports.cfg;
 
-    var cfg = module.parent.exports.cfg;
+    var mongoose = require("mongoose");
+    require("../lib/email.js").loadType(mongoose);
 
-    var mongoose = require("mongoose"),
-        salt = cfg.security.salt,
-        SHA2 = new (require('jshashes').SHA512)();
-
-
-    require("../types/email.js").loadType(mongoose);
-
-    function encodePassword(pass) {
-        if (typeof pass === 'string' && pass.length < 6)
-            return ''
-
-        return SHA2.b64_hmac(pass, salt)
-    }
+    var encodePassword = require("../lib/passwordEncoder.js").encodePassword;
 
     // from ../types/email.js
     var Email = mongoose.SchemaTypes.Email;
@@ -44,13 +34,6 @@
         facebookMetaData:{}
 
     });
-
-    User.statics.classicLogin = function (login, pass, cb) {
-        mongoose.models.User
-            .where('email', login)
-            .where('password', encodePassword(pass))
-            .findOne(cb);
-    }
 
     mongoose.model('user', User);
 }());

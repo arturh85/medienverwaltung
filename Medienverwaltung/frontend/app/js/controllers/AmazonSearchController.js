@@ -1,5 +1,5 @@
 function AmazonSearchController($scope, $location, $route) {
-    if($route.current != undefined) {
+    if($route.current !== undefined) {
         $scope.params = $route.current.params;
     } else {
         $scope.params = {};
@@ -19,7 +19,7 @@ function AmazonSearchController($scope, $location, $route) {
 
     $scope.search = function() {
         $location.path = "/amazon/search/" + $scope.amazonSearch;
-    }
+    };
 }
 AmazonSearchController.$inject = ["$scope", "$location", "$route"];
 

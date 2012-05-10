@@ -29,7 +29,10 @@
                 var userPromise = this.Promise();
 
                 var result = Model.findOne({fbId: fbUserMetadata.id}, function(err, user) {
-                    if (err) return userPromise.fail(err);
+                    if (err) {
+                        return userPromise.fail(err);
+                    }
+
                     if (user) {
                         console.log("authenticated: " + JSON.stringify(user));
                         return userPromise.fulfill(user);
@@ -43,20 +46,22 @@
                         user.fullname = fbUserMetadata.name;
                         user.fbLink = fbUserMetadata.link;
                         user.email = fbUserMetadata.email;
-                        user.gender = fbUserMetadata.gender == "male" ? "m" : "f";
+                        user.gender = fbUserMetadata.gender === "male" ? "m" : "f";
 
                         // preserve original metadata
                         user.facebookMetaData = fbUserMetadata;
 
                         try {
                             user.save(function (err) {
-                                if(err) return userPromise.fail(err);
+                                if(err) {
+                                    return userPromise.fail(err);
+                                }
                                 console.log("authenticated: " + JSON.stringify(user));
                                 return userPromise.fulfill(user);
                             });
                         } catch(e) {
                             console.log("error saving user: " + JSON.stringify(e));
-                            res.redirect("/#/login/error/" + e.message);
+                            return userPromise.fail(e);
                         }
                     }
                 });

@@ -31,7 +31,9 @@
                 var userPromise = this.Promise();
 
                 var result = Model.findOne({claimedIdentifier: openIdUserAttributes.claimedIdentifier}, function(err, user) {
-                    if (err) return userPromise.fail(err);
+                    if (err) {
+                        return userPromise.fail(err);
+                    }
                     if (user) {
                         console.log("authenticated: " + JSON.stringify(user));
                         return userPromise.fulfill(user);
@@ -48,7 +50,9 @@
                         user.openIdMetaData = openIdUserAttributes;
 
                         user.save(function (err) {
-                            if(err) return userPromise.fail(err);
+                            if(err) {
+                                return userPromise.fail(err);
+                            }
                             console.log("authenticated: " + JSON.stringify(user));
                             return userPromise.fulfill(user);
                         });

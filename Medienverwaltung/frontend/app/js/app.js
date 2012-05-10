@@ -1,4 +1,4 @@
-/*global LoginController: true, MediaEditController: true, MediaListController: true */
+/*global LoginController: true, MediaEditController: true, MediaListController: true, RegisterController: true, ProfileController: true, AmazonSearchController: true */
 
 (function () {
     "use strict";
@@ -12,6 +12,7 @@
       config(['$routeProvider', function($routeProvider) {
         $routeProvider.when('/login/error/:message', {template: 'partials/login.html', controller: LoginController});
         $routeProvider.when('/login', {template: 'partials/login.html', controller: LoginController});
+        $routeProvider.when('/register', {template: 'partials/register.html', controller: RegisterController});
         $routeProvider.when('/profile/:id', {template: 'partials/profile.html', controller: ProfileController});
         $routeProvider.when('/profile', {template: 'partials/prfile.html', controller: ProfileController});
         $routeProvider.when('/amazon/search/:query', {template: 'partials/amazon/search.html', controller: AmazonSearchController});

@@ -1,9 +1,11 @@
 (function () {
     "use strict";
 
-    var app = module.parent.exports.app,
-        db = module.parent.exports.db,
-        authProviders = module.parent.exports.authProviders;
+    var cfg = module.exports.cfg = module.parent.exports.cfg;
+
+    var db = module.parent.exports.db,
+        authProviders = module.parent.exports.authProviders,
+        encodePassword = require("../lib/passwordEncoder.js").encodePassword;
 
     authProviders.push(function(everyauth) {
         everyauth.password
@@ -13,62 +15,91 @@
             .getRegisterPath('/#/register') // Uri path to the registration page
             .postRegisterPath('/register') // The Uri path that your registration form POSTs to
             .addToSession( function (sess, user, errors) {
-                var _auth = sess.auth || (sess.auth = {});
-                if (user)
+                if(!sess.auth) {
+                    sess.auth = {};
+                }
+                var _auth = sess.auth;
+
+                if (user) {
                     _auth.userId = user.id;
-                _auth.loggedIn = !!user;
-                _auth.loginMethod = 'password';
+                    _auth.loggedIn = !!user;
+                    _auth.loginMethod = 'password';
+                }
             })
             .authenticate( function(login, password) {
-                var promise
-                    , errors = [];
-                if (!login) errors.push('Missing login.');
-                if (!password) errors.push('Missing password.');
-                if (errors.length) return errors;
+                var errors = [];
 
-                console.log("password authentication");
+                if (!login) {
+                    errors.push('Missing login.');
+                }
+                if (!password) {
+                    errors.push('Missing password.');
+                }
+                if (errors.length) {
+                    console.log("authentication failed: " + JSON.stringify(errors));
+                    return errors;
+                }
 
-                var userPromise = this.Promise();
+                var promise = this.Promise();
+                var encodedPassword = encodePassword(password);
+                var Model = db.model('user');
 
-                app.models.user.classicLogin(login, password, function(err, user) {
+                var qw = Model.findOne({email: login, password: encodedPassword}, function(err, user) {
                     if (err) {
                         errors.push(err.message || err);
-                        return userPromise.fulfill(errors);
+                        return promise.fail(errors);
                     }
 
                     if(!user) {
                         var msg = 'User with login ' + login + ' does not exist.';
                         console.log(msg);
                         errors.push(msg);
-                        return promise.fulfill(errors);
+                        return promise.fail(errors);
                     }
 
                     console.log("authenticated: " + JSON.stringify(user));
-                    return userPromise.fulfill(user);
-                });
-
-                return userPromise;
-            })
-            .validateRegistration( function (newUserAttributes) {
-                var errors = [];
-                if (!newUserAttributes.email) errors.push('Missing email address.');
-                if (!newUserAttributes.password) errors.push('Missing password.');
-                if (errors.length) return errors;
-            })
-            .registerUser( function (newUserAttributes) {
-                var promise = this.Promise()
-                    , password = newUserAttributes.password;
-
-                var Model = db.model('user');
-                var user = new Model(newUserAttributes);
-
-                user.save(function (err) {
-                    if (err) return promise.fail(err);
                     return promise.fulfill(user);
                 });
 
                 return promise;
             })
+            .respondToLoginFail( function (req, res, errors, login) {
+                if (!errors || !errors.length) {
+                    return;
+                }
+                res.redirect("/#/login/error/" + errors.join(" "));
+            })
+            .validateRegistration( function (newUserAttributes) {
+                var errors = [];
+                if (!newUserAttributes.email) {
+                    errors.push('Missing email address.');
+                }
+                if (!newUserAttributes.password) {
+                    errors.push('Missing password.');
+                }
+                if (errors.length) {
+                    console.log("registration failed: " + JSON.stringify(errors));
+                    return errors;
+                }
+
+                return {};
+            })
+            .registerUser( function (newUserAttributes) {
+                var promise = this.Promise();
+
+                var Model = db.model('user');
+                var user = new Model(newUserAttributes);
+
+                user.save(function (err) {
+                    if (err) {
+                        return promise.fail(err);
+                    }
+                    return promise.fulfill(user);
+                });
+
+                return promise;
+            })
+            .loginSuccessRedirect('/')
             .registerSuccessRedirect('/'); // Where to redirect to after a successful registration
     });
 }());

@@ -1,7 +1,9 @@
 var authControllerLoaded = false;
 
 function AuthController($rootScope, $http, $location) {
-    if(authControllerLoaded) return ;
+    if(authControllerLoaded) {
+        return ;
+    }
     authControllerLoaded = true;
 
     $rootScope.auth = undefined;

@@ -26,7 +26,7 @@
     }
 
     function getLargestImageUrl(item) {
-        var largestImageUrl = undefined;
+        var largestImageUrl;
 
         if(item.LargeImage) {
             largestImageUrl = item.LargeImage.URL;
@@ -36,13 +36,13 @@
             largestImageUrl = item.SmallImage.URL;
         }
 
-        return largestImageUrl
+        return largestImageUrl;
     }
 
     function fetchAmazonImage(item, callback) {
         var largestImageUrl = getLargestImageUrl(item);
 
-        if(largestImageUrl != undefined) {
+        if(largestImageUrl !== undefined) {
             request({uri:largestImageUrl}, callback);
         } else {
             callback();
@@ -81,8 +81,7 @@
             var userId = req.session.auth.userId;
 
             Model.findById(req.params.id, function (err, doc) {
-                var itemId = undefined;
-                var idType = undefined;
+                var itemId, idType;
 
                 if(doc.isbn) {
                     itemId = doc.isbn;
@@ -100,7 +99,9 @@
                     IdType: idType,
                     ResponseGroup: "Images,ItemAttributes"},
                     function(err, result) {
-                        if(err) throw err;
+                        if(err) {
+                            throw err;
+                        }
 
                         var errors = result.Items.Request.Errors;
 
@@ -118,7 +119,7 @@
 
 
                             fetchAmazonImage(item, function (error, response, body) {
-                                if (!error && response.statusCode == 200) {
+                                if (!error && response.statusCode === 200) {
                                     doc.image = body;
                                 }
 
