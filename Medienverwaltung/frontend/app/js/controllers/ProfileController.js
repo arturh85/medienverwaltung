@@ -1,4 +1,4 @@
-function ProfileController($scope, $route, UserCollection, $location) {
+function ProfileController($scope, $route, User, $location) {
     $scope.params = $route.current.params;
     $scope.user = undefined;
 
@@ -11,7 +11,7 @@ function ProfileController($scope, $route, UserCollection, $location) {
         return ;
     }
 
-    UserCollection.get({id: id}, function(user) {
+    User.get({id: id}, function(user) {
         $scope.original = angular.copy(user);
         $scope.user = user;
         $scope.loading = false;
@@ -28,4 +28,4 @@ function ProfileController($scope, $route, UserCollection, $location) {
         });
     };
 }
-ProfileController.$inject = ["$scope", "$route", "UserCollection", "$location"];
+ProfileController.$inject = ["$scope", "$route", "User", "$location"];

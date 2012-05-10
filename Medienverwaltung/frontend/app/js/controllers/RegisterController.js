@@ -1,5 +1,5 @@
-function RegisterController($scope, $route, UserCollection, $location) {
-    $scope.user = new UserCollection();
+function RegisterController($scope, $route, User, $location) {
+    $scope.user = new User();
 
     var query = {};
 
@@ -14,4 +14,4 @@ function RegisterController($scope, $route, UserCollection, $location) {
         });
     };
 }
-RegisterController.$inject = ["$scope", "$route", "UserCollection", "$location"];
+RegisterController.$inject = ["$scope", "$route", "User", "$location"];

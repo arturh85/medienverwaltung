@@ -3,35 +3,42 @@
 (function () {
     "use strict";
 
+
     /* jasmine specs for controllers go here */
+    describe('controllers', function() {
 
-    describe('MediaListController', function(){
-      var mediaController;
-      var $scope = {};
+        beforeEach(function(){
+            this.addMatchers({
+                toEqualData: function(expected) {
+                    return angular.equals(this.actual, expected);
+                }
+            });
+        });
 
-      beforeEach(function(){
-          var mediaCollection = {
-              query: function() {
+        beforeEach(module('medienverwaltung.services'));
 
-              }
-          };
+        describe('MediaListController', function () {
+            var scope, ctrl, $httpBackend;
 
-          var $route = {
-              current: {
-                  params: []
-              }
-          };
-          mediaController = new MediaListController($scope, $route, mediaCollection);
-      });
+            beforeEach(inject(function (_$httpBackend_, $rootScope, $controller, $route) {
+                $httpBackend = _$httpBackend_;
+                $httpBackend.expectGET('api/media').
+                    respond([
+                    {isbn:'3442369673'},
+                    {isbn:'3442369681'}
+                ]);
 
+                scope = $rootScope.$new();
+                ctrl = $controller(MediaListController, {$scope: scope, $route: $route});
+            }));
 
-      it('should fill the scope with methods', function() {
-        expect($scope.addByISBN).toBeDefined();
-        expect($scope.reload).toBeDefined();
-        expect($scope.loading).toBeDefined();
-        expect($scope.params).toBeDefined();
-      });
+            it('should create "media" model with 2 media fetched from xhr', function() {
+                expect(scope.media).toEqual([]);
+                $httpBackend.flush();
+
+                expect(scope.media).toEqualData(
+                    [{isbn: '3442369673'}, {isbn: '3442369681'}]);
+            });
+        });
     });
-
-
 }());

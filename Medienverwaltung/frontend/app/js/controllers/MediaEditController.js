@@ -1,4 +1,4 @@
-function MediaEditController($scope, $route, MediaCollection, $http, $location) {
+function MediaEditController($scope, $route, Media, $http, $location) {
     var self = this;
     $scope.params = $route.current.params;
 
@@ -9,7 +9,7 @@ function MediaEditController($scope, $route, MediaCollection, $http, $location) 
             $http({method: 'GET', url: '/amazon/enrich/'+ $scope.media._id}).
                 success(function(data, status, headers, config) {
                     self.original = data;
-                    $scope.media = new MediaCollection(self.original);
+                    $scope.media = new Media(self.original);
                 }).
                 error(function(data, status, headers, config) {
                     console.log("failed");
@@ -18,16 +18,16 @@ function MediaEditController($scope, $route, MediaCollection, $http, $location) 
     };
 
     $scope.reload = function() {
-        MediaCollection.get({id: $scope.params.id}, function(media) {
+        Media.get({id: $scope.params.id}, function(media) {
             self.original = media;
-            $scope.media = new MediaCollection(self.original);
+            $scope.media = new Media(self.original);
         });
     };
 
     $scope.reload();
 
     $scope.isClean = function() {
-        return angular.equals(self.original, $scope.med);
+        return angular.equals(self.original, $scope.media);
     };
 
     $scope.isImageProperty = function(property) {
@@ -47,4 +47,4 @@ function MediaEditController($scope, $route, MediaCollection, $http, $location) 
     };
 
 }
-MediaEditController.$inject = ["$scope", "$route", "MediaCollection", "$http", "$location"];
+MediaEditController.$inject = ["$scope", "$route", "Media", "$http", "$location"];

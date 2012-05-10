@@ -1,11 +1,12 @@
-function MediaListController($scope, $route, MediaCollection, $http) {
-    $scope.params = $route.current.params;
+function MediaListController($scope, Media) {
     $scope.loading = false;
     $scope.amazonResults = [];
+    $scope.media = [];
 
     $scope.reload = function() {
         $scope.loading = true;
         var query = {};
+        /*
         if($scope.params.type) {
             if($scope.params.type === 'withoutImage') {
                 query.image = undefined;
@@ -14,8 +15,9 @@ function MediaListController($scope, $route, MediaCollection, $http) {
                 console.log("filtering by " + $scope.params.type);
             }
         }
+        */
 
-        MediaCollection.query(query, function(medium) {
+        Media.query(query, function(medium) {
             $scope.media = medium;
             $scope.loading = false;
             console.log("loaded media: " + JSON.stringify(medium));
@@ -24,7 +26,7 @@ function MediaListController($scope, $route, MediaCollection, $http) {
 
     $scope.addByISBN = function() {
         console.log("adding " + $scope.isbn);
-        MediaCollection.save({isbn: $scope.isbn}, function(medium) {
+        Media.save({isbn: $scope.isbn}, function(medium) {
             console.log("added: " + JSON.stringify(medium));
             $scope.isbn = '';
             $scope.reload();
@@ -42,4 +44,4 @@ function MediaListController($scope, $route, MediaCollection, $http) {
 
     $scope.reload();
 }
-MediaListController.$inject = ["$scope", "$route", "MediaCollection", "$http", "$rootScope"];
+MediaListController.$inject = ["$scope", "Media"];

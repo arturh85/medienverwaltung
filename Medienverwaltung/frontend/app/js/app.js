@@ -6,8 +6,7 @@
     angular.module('medienverwaltung', [
         'medienverwaltung.filters',
         'medienverwaltung.services',
-        'medienverwaltung.directives',
-        'medienverwaltung.collections'
+        'medienverwaltung.directives'
     ]).
       config(['$routeProvider', function($routeProvider) {
         $routeProvider.when('/login/error/:message', {template: 'partials/login.html', controller: LoginController});
