@@ -9,6 +9,7 @@
 
     authProviders.push(function(everyauth) {
         everyauth.facebook
+            .myHostname(app.set('baseUrl'))
             .appId(cfg.facebook.appId)
             .appSecret(cfg.facebook.appSecret)
             .scope('email')
