@@ -3,14 +3,15 @@
     "version": "0.0.1",
     "private": true,
     "dependencies": {
-        "session-mongoose": ">= 0.0.1",
-        "jshashes": "0.1.3b",
-        "request": "2.9.202",
-        "jade": "0.26.0",
-        "express": "2.5.8",
-        "aws-lib": "0.0.6",
-        "everyauth": "0.2.32",
-        "mongoose": "2.6.0"
+        "aws-lib": ">= 0.2.1",
+        "connect": ">= 2.7.6",
+        "everyauth": ">= 0.3.1",
+        "express": ">= 3.2.0",
+        "jade": ">= 0.30.0",
+        "jshashes": ">= 1.0.3",
+        "mongoose": ">= 3.6.8",
+        "request": ">= 2.20.0",
+        "session-mongoose": ">= 0.2.2"
     }
 }
 

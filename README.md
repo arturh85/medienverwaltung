@@ -28,8 +28,8 @@ Setting up development environment:
 * cd to backend directory of angular project
 * copy config.sample.json to config.json and add your Amazon API secrets
 * run 'npm install -d'
-* run 'node app.js'
-* (optionally) run 'npm install -g supervisor' and use 'supervisor app.js' to reload changes automatically
+* run 'node backend.js'
+* (optionally) run 'npm install -g supervisor' and use 'supervisor backend.js' to reload changes automatically
 * open http://localhost:3000 in browser
 
 Credits

@@ -12,15 +12,16 @@
     // include 3rd-party libraries
     var express = require('express'),
         mongoose = require('mongoose'),
+        connect = require('connect'),
         everyauth = module.exports.everyauth = require('everyauth'),
-        SessionMongoose = require("session-mongoose");
+        SessionStore = require("session-mongoose")(connect);
 
     var serverAddress,
         serverPort,
         mode;
 
     // create server
-    var app = module.exports.app = express.createServer();
+    var app = module.exports.app = express();
 
     // load configuration
     try {
@@ -91,7 +92,7 @@
         console.log("connected to mongodb: " + app.set('mongoUrl'));
     });
 
-    var mongooseSessionStore = new SessionMongoose({
+    var mongooseSessionStore = new SessionStore({
         url: app.set('mongoSessionUrl'),
         interval: 120000 // expiration check worker run interval in millisec (default: 60000)
     });
@@ -151,44 +152,50 @@
     };
     sys.inherits(NotAllowed, Error);
 
-    // Error 401
-    app.error(function (err, req, res, next) {
-        if (err instanceof NotLoggedIn) {
-            var msg = '401 Unauthorized';
-            //console.log(msg + ": " + JSON.stringify(req));
-            res.send(msg, 401);
-        } else {
-            next(err);
-        }
-    });
+//    // Error 401
+//    app.error(function (err, req, res, next) {
+//        if (err instanceof NotLoggedIn) {
+//            var msg = '401 Unauthorized';
+//            //console.log(msg + ": " + JSON.stringify(req));
+//            res.send(msg, 401);
+//        } else {
+//            next(err);
+//        }
+//    });
 
-    // Error 403
-    app.error(function (err, req, res, next) {
-        if (err instanceof NotAllowed) {
-            var msg = '403 Forbidden';
-            //console.log(msg + ": " + JSON.stringify(req));
-            res.send(msg, 403);
-        } else {
-            next(err);
-        }
-    });
 
-    // Error 404
-    app.error(function (err, req, res, next) {
-        if (err instanceof NotFound) {
-            var msg = '404 Not found';
-            //console.log(msg + ": " + JSON.stringify(req));
-            res.send(msg, 404);
-        } else {
-            next(err);
-        }
-    });
+//    // Error 403
+//    app.error(function (err, req, res, next) {
+//        if (err instanceof NotAllowed) {
+//            var msg = '403 Forbidden';
+//            //console.log(msg + ": " + JSON.stringify(req));
+//            res.send(msg, 403);
+//        } else {
+//            next(err);
+//        }
+//    });
+//
+//    // Error 404
+//    app.error(function (err, req, res, next) {
+//        if (err instanceof NotFound) {
+//            var msg = '404 Not found';
+//            //console.log(msg + ": " + JSON.stringify(req));
+//            res.send(msg, 404);
+//        } else {
+//            next(err);
+//        }
+//    });
+//
+//    // Error 500
+//    app.error(function (err, req, res) {
+//        var msg = '500 Internal server error';
+//        console.log(err + ": " + JSON.stringify(err));
+//        res.send(msg, 500);
+//    });
 
-    // Error 500
-    app.error(function (err, req, res) {
-        var msg = '500 Internal server error';
-        console.log(err + ": " + JSON.stringify(err));
-        res.send(msg, 500);
+    app.use(function(err, req, res, next){
+        console.error(err.stack);
+        res.send(500, 'Something broke!');
     });
 
     var staticString = "static";
@@ -206,7 +213,6 @@
         app.use(express.methodOverride());
         app.use(everyauth.middleware());
         app.use(app.router);
-        everyauth.helpExpress(app);
     });
 
     // start server
