@@ -1,4 +1,7 @@
-function MediaEditController($scope, $route, Media, $http, $location) {
+'use strict';
+
+controllersModule.controller('MediaEditController', ["$scope", "$route", "Media", "$http", "$location", function($scope, $route, Media, $http, $location) {
+	console.log("init MediaEditController");
     var self = this;
     $scope.params = $route.current.params;
 
@@ -46,5 +49,4 @@ function MediaEditController($scope, $route, Media, $http, $location) {
         });
     };
 
-}
-MediaEditController.$inject = ["$scope", "$route", "Media", "$http", "$location"];
+}]);

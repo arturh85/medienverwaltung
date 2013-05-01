@@ -1,4 +1,7 @@
-function RegisterController($scope, $route, User, $location) {
+'use strict';
+
+controllersModule.controller('RegisterController', ["$scope", "$route", "User", "$location", function($scope, $route, User, $location) {
+	console.log("init RegisterController");
     $scope.user = new User();
 
     var query = {};
@@ -13,5 +16,4 @@ function RegisterController($scope, $route, User, $location) {
             $location.path("/login");
         });
     };
-}
-RegisterController.$inject = ["$scope", "$route", "User", "$location"];
+}]);

@@ -1,4 +1,7 @@
-function ProfileController($scope, $route, User, $location) {
+'use strict';
+
+controllersModule.controller('ProfileController', ["$scope", "$route", "User", "$location", function($scope, $route, User, $location) {
+	console.log("init ProfileController");
     $scope.params = $route.current.params;
     $scope.user = undefined;
 
@@ -27,5 +30,4 @@ function ProfileController($scope, $route, User, $location) {
             $scope.original = angular.copy(user);
         });
     };
-}
-ProfileController.$inject = ["$scope", "$route", "User", "$location"];
+}]);

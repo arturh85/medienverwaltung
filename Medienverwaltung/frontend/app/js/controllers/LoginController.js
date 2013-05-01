@@ -1,4 +1,7 @@
-function LoginController($scope, $http, $location) {
+'use strict';
+
+controllersModule.controller('LoginController', ["$scope", "$http", "$location", function($scope, $http, $location) {
+	console.log("init LoginController");
     $scope.email = "";
     $scope.password = "";
     $scope.usePasswortLogin = false;
@@ -32,5 +35,4 @@ function LoginController($scope, $http, $location) {
                 console.log("failed");
             });
     };
-}
-LoginController.$inject = ["$scope", "$http", "$location"];
+}]);

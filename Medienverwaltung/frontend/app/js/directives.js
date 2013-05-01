@@ -1,13 +1,12 @@
-(function () {
-    "use strict";
+'use strict';
 
-/* http://docs-next.angularjs.org/api/angular.module.ng.$compileProvider.directive */
+/* Directives */
 
-    angular.module('medienverwaltung.directives', []).
-            directive('appVersion', ['version', function(version) {
-            return function(scope, elm, attrs) {
-                elm.text(version);
-            };
-        }]);
 
-}());
+angular.module('medienverwaltung.directives', []).
+	directive('appVersion', ['version', function(version) {
+		return function(scope, elm, attrs) {
+			elm.text(version);
+		};
+	}]);
+

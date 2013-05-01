@@ -61,12 +61,13 @@
             var items = result.Items.Item;
 
             var retArray = [];
-            angular.forEach(items, function(item) {
+			for(var i=0; i<items.length; i++) {
+				var item = items[i];
                 var ret = {};
                 mapAmazonData(ret, item);
                 ret.imageUrl = getLargestImageUrl(item);
                 retArray.push(ret);
-            });
+            }
 
             res.header('Content-Type', 'application/json');
             res.send(retArray, 200);

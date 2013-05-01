@@ -1,5 +1,7 @@
 {{ media | json }}
 
+{{ auth.email }}
+
 <form name="myForm">
     <div ng-show="media.isbn" class="control-group" ng-class="{error: myForm.isbn.$invalid}">
         <label>ISBN</label>

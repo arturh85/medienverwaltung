@@ -1,25 +1,25 @@
-/*global LoginController: true, MediaEditController: true, MediaListController: true, RegisterController: true, ProfileController: true, AmazonSearchController: true */
+'use strict';
 
-(function () {
-    "use strict";
-    // Declare app level module which depends on filters, and services
-    angular.module('medienverwaltung', [
-        'medienverwaltung.filters',
-        'medienverwaltung.services',
-        'medienverwaltung.directives'
-    ]).
-      config(['$routeProvider', function($routeProvider) {
-        $routeProvider.when('/login/error/:message', {template: 'partials/login.html', controller: LoginController});
-        $routeProvider.when('/login', {template: 'partials/login.html', controller: LoginController});
-        $routeProvider.when('/register', {template: 'partials/register.html', controller: RegisterController});
-        $routeProvider.when('/profile/:id', {template: 'partials/profile.html', controller: ProfileController});
-        $routeProvider.when('/profile', {template: 'partials/prfile.html', controller: ProfileController});
-        $routeProvider.when('/amazon/search/:query', {template: 'partials/amazon/search.html', controller: AmazonSearchController});
-        $routeProvider.when('/media/edit/:id', {template: 'partials/media/form.html', controller: MediaEditController});
-        $routeProvider.when('/media/:type', {template: 'partials/media/browse.html', controller: MediaListController});
-        $routeProvider.when('/media', {template: 'partials/media/browse.html', controller: MediaListController});
-        $routeProvider.otherwise({redirectTo: '/media'});
-    }]);
+// Declare app level module which depends on filters, and services
+angular.module('medienverwaltung', [
+		'medienverwaltung.filters',
+		'medienverwaltung.services',
+		'medienverwaltung.directives',
+		'medienverwaltung.controllers']).
+	config(['$routeProvider', function($routeProvider) {
+		$routeProvider.when('/login/error/:message', {templateUrl: 'partials/login.html', controller: 'LoginController'});
+		$routeProvider.when('/login', {templateUrl: 'partials/login.html', controller: 'LoginController'});
+		$routeProvider.when('/register', {templateUrl: 'partials/register.html', controller: 'RegisterController'});
+		$routeProvider.when('/profile/:id', {templateUrl: 'partials/profile.html', controller: 'ProfileController'});
+		$routeProvider.when('/profile', {templateUrl: 'partials/prfile.html', controller: 'ProfileController'});
+		$routeProvider.when('/amazon/search/:query', {templateUrl: 'partials/amazon/search.html', controller: 'AmazonSearchResultController'});
+		$routeProvider.when('/media/edit/:id', {templateUrl: 'partials/media/form.html', controller: 'MediaEditController'});
+		$routeProvider.when('/media/:type', {templateUrl: 'partials/media/browse.html', controller: 'MediaListController'});
+		$routeProvider.when('/media', {templateUrl: 'partials/media/browse.html', controller: 'MediaListController'});
+		$routeProvider.otherwise({redirectTo: '/media'});
+	}]);
+
+var controllersModule = angular.module('medienverwaltung.controllers', []);
 
 //    $('#openid-login').click(function(){
 //        var url = $('#openid-provider-url').val();
@@ -92,5 +92,3 @@
 //            showLoginPrompt(provider, 'ClaimID', 'http://openid.claimid.com/%USER%');
 //        }
 //    }
-
-}());

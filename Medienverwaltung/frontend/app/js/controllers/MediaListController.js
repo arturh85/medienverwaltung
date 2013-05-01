@@ -1,7 +1,11 @@
-function MediaListController($scope, Media) {
+'use strict';
+
+controllersModule.controller('MediaListController', ["$scope", "$routeParams", "Media", function($scope, $routeParams, Media) {
+	console.log("init MediaListController");
     $scope.loading = false;
     $scope.amazonResults = [];
     $scope.media = [];
+	$scope.type = $routeParams.type;
 
     $scope.reload = function() {
         $scope.loading = true;
@@ -36,12 +40,11 @@ function MediaListController($scope, Media) {
     $scope.deleteMedium = function(medium) {
         console.log("deleting " + JSON.stringify(medium));
 
-        medium.$delete({id: medium._id}, function() {
-            console.log("success");
-            $scope.reload();
-        });
+		medium.$delete({id: medium._id}, function() {
+			console.log("success");
+			$scope.reload();
+		});
     };
 
     $scope.reload();
-}
-MediaListController.$inject = ["$scope", "Media"];
+}]);
