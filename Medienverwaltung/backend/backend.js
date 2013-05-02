@@ -2,6 +2,8 @@
 (function () {
 	"use strict";
 
+	process.chdir(__dirname);
+
 	// include node.js
 	var application_root = __dirname,
 		fs = require('fs'),
@@ -97,39 +99,6 @@
 		interval: 120000 // expiration check worker run interval in millisec (default: 60000)
 	});
 
-	// file loader (for controllers, models, ...)
-	var loadJsDirectory = function (dir, run) {
-		fs.readdir(dir, function (err, files) {
-			if (err) {
-				throw err;
-			}
-
-			files.forEach(function (file) {
-				if (fileExtension(file) === '.js') {
-					require(dir + '/' + file.replace('.js', ''));
-				}
-			});
-		});
-	};
-
-	loadJsDirectory("./models");
-	loadJsDirectory("./controllers");
-	module.exports.authProviders = [];
-
-	require("./authProviders/openid");
-	require("./authProviders/facebook");
-	require("./authProviders/password");
-
-	module.exports.authProviders.forEach(function (registerAuthProvider) {
-		registerAuthProvider(everyauth);
-	});
-
-	everyauth.everymodule
-		.findUserById(function (userId, callback) {
-			var Model = db.model('user');
-			Model.findById(userId, callback);
-		});
-
 	// define shortcut exceptions for setting correct HTTP status codes
 	var NotFound = module.exports.NotFound = function (msg) {
 		this.name = 'NotFound';
@@ -151,6 +120,62 @@
 		//Error.captureStackTrace(this, arguments.callee);
 	};
 	sys.inherits(NotAllowed, Error);
+
+	var ValidationFailed = module.exports.ValidationFailed = function (err) {
+		this.name = 'ValidationFailed';
+
+		console.log("validation failed");
+		console.log(JSON.stringify(err));
+
+		Error.call(this, err);
+		//Error.captureStackTrace(this, arguments.callee);
+	};
+	sys.inherits(NotAllowed, Error);
+
+	// file loader (for controllers, models, ...)
+	var loadJsDirectory = function (dir) {
+		fs.readdir(dir, function (err, files) {
+			if (err) {
+				throw err;
+			}
+
+			files.forEach(function (file) {
+				if (fileExtension(file) === '.js') {
+					console.log("require");
+					require(dir + '/' + file.replace('.js', ''));
+				}
+			});
+		});
+	};
+	// file loader (for controllers, models, ...)
+	var loadJsDirectorySync = function (dir) {
+		var files = fs.readdirSync(dir)
+		for(var i=0; i<files.length; i++) {
+			var file = files[i];
+			if (fileExtension(file) === '.js') {
+				require(dir + '/' + file.replace('.js', ''));
+			}
+		}
+	};
+
+	loadJsDirectorySync("./models");
+	loadJsDirectorySync("./controllers");
+	module.exports.authProviders = [];
+
+	require("./authProviders/openid");
+	require("./authProviders/facebook");
+	require("./authProviders/password");
+
+	module.exports.authProviders.forEach(function (registerAuthProvider) {
+		registerAuthProvider(everyauth);
+	});
+
+	everyauth.everymodule
+		.findUserById(function (userId, callback) {
+			var Model = db.model('user');
+			Model.findById(userId, callback);
+		});
+
 
 	app.configure(function () {
 		app.use(express["static"](application_root + "/../frontend/app"));
@@ -175,8 +200,11 @@
 			} else if (err instanceof NotLoggedIn) {
 				var msg = '401 Unauthorized';
 				res.send(msg, 401);
+			} else if (err instanceof ValidationFailed) {
+				console.log("SENDING " + JSON.stringify(err.msg));
+				res.send(err.msg, 400);
 			} else {
-				console.log("unhandled error: " + JSON.stringify(err));
+				console.log("unhandled error: " + err);
 				res.send(500, 'Something broke!');
 			}
 		});
@@ -186,4 +214,7 @@
 	// start server
 	app.listen(serverPort, serverAddress);
 	console.log("server started in " + mode + " mode on http://" + serverAddress + ":" + serverPort);
+
+	// expose app
+	exports = module.exports = app
 }());

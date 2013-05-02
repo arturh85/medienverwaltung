@@ -3,7 +3,8 @@
 
     var cfg = module.exports.cfg = module.parent.exports.cfg;
 
-    var mongoose = require("mongoose");
+    var mongoose = require("mongoose"),
+		Schema = mongoose.Schema;
     require("../lib/email.js").loadType(mongoose);
 
     var encodePassword = require("../lib/passwordEncoder.js").encodePassword;
@@ -11,7 +12,7 @@
     // from ../types/email.js
     var Email = mongoose.SchemaTypes.Email;
 
-    var User = new mongoose.Schema({
+    var User = new Schema({
         // user attributes
         fullname:String,
         gender:String,

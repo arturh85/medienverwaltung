@@ -32,6 +32,11 @@ Setting up development environment:
 * (optionally) run 'npm install -g supervisor' and use 'supervisor backend.js' to reload changes automatically
 * open http://localhost:3000 in browser
 
+Setting up jasmine tests for backend
+-----------------------------------
+
+* run 'npm install jasmine-node -g
+
 Credits
 -------
 

@@ -1,7 +1,13 @@
 {
     "name": "medienverwaltung",
     "version": "0.0.1",
+	"author": "Artur Hallmann <arturh@arturh.de> (http://madhums.github.com)",
     "private": true,
+	"scripts": {
+		"start": "NODE_ENV=development ./node_modules/.bin/nodemon server.js",
+		"startprod": "NODE_ENV=production ./node_modules/.bin/nodemon server.js",
+		"test": "NODE_ENV=test ./node_modules/.bin/mocha --reporter spec test/test-*.js"
+	},
     "dependencies": {
         "aws-lib": ">= 0.2.1",
         "connect": ">= 2.7.6",
@@ -12,6 +18,12 @@
         "mongoose": ">= 3.6.8",
         "request": ">= 2.20.0",
         "session-mongoose": ">= 0.2.2"
-    }
+    },
+	"devDependencies": {
+		"supertest": "latest",
+		"should": "latest",
+		"mocha": "latest",
+		"nodemon": "latest"
+	}
 }
 
